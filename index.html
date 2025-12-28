@@ -369,6 +369,44 @@
 .phone .phone-screen{
   border-radius: 28px !important; /* 保留圓角感 */
 }
+/* === Mobile viewport: make the framed phone nearly full-screen === */
+@media (max-width: 520px){
+  /* 你的頁面外層如果有 padding/margin，先壓到最小 */
+  body{
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* 常見你會有一個置中容器 */
+  .page,
+  .wrap,
+  .container{
+    padding: 10px !important;      /* 讓留白縮到很小 */
+    margin: 0 auto !important;
+  }
+
+  /* 讓手機框接近滿版：寬接近 100vw、高接近 100vh */
+  .phone{
+    width: min(96vw, 520px) !important;     /* 幾乎滿版 */
+    height: auto !important;
+    margin: 10px auto !important;
+    transform: none !important;            /* 若你原本用 scale 置中，手機上不要縮小 */
+  }
+
+  /* 如果你原本用固定高度，改用視窗高度（保留框厚度） */
+  .phone{
+    /* 這兩行能讓整體更接近滿版且避免被瀏覽器工具列遮到 */
+    max-height: 92dvh !important;
+  }
+
+  /* 內屏幕跟著撐滿：如果你有一層 screen 容器 */
+  .phone .screen,
+  .phone .phone-screen,
+  .phone .app{
+    height: 92dvh !important;
+    max-height: 92dvh !important;
+  }
+}
 
   </style>
 </head>
@@ -1920,4 +1958,5 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 </body>
 </html>
+
 
