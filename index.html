@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>M9/M12 能力盤點 Beta（方案A｜多主題題庫｜單檔 Demo）</title>
+  <title>M9/M12 能力測驗 Beta（方案A｜多主題題庫｜單檔 Demo）</title>
   <style>
     :root{
       --bg:#F6F8FB;
@@ -359,7 +359,7 @@
         <!-- S1: Target input -->
         <section id="v-s1" class="view active">
           <div class="wrap">
-            <h1>你想盤點哪個<br/>職場能力？</h1>
+            <h1>你想測驗哪個<br/>職場能力？</h1>
             <p>3–5 分鐘完成測評，立即拿到星等與建議。</p>
 
             <input id="targetInput" class="input" placeholder="e.g. 溝通協作 / 執行推進 / 問題解決 / 領導帶人" />
@@ -446,7 +446,7 @@
                 <div>
                   <div class="muted" style="font-weight:800; font-size:13px; margin-bottom:8px;">使用情境</div>
                   <div class="chips">
-                    <div class="chip pref" data-key="role" data-val="individual">個人盤點</div>
+                    <div class="chip pref" data-key="role" data-val="individual">個人測驗</div>
                     <div class="chip pref" data-key="role" data-val="manager">主管視角</div>
                     <div class="chip pref" data-key="role" data-val="hr">HR/顧問</div>
                   </div>
@@ -477,7 +477,7 @@
           </div>
 
           <div class="wrap">
-            <h1 id="overviewTitle">能力盤點概覽</h1>
+            <h1 id="overviewTitle">能力測驗概覽</h1>
             <p>你將回答幾個情境題。選「你平常的做法」即可。</p>
 
             <div class="card">
@@ -520,7 +520,7 @@
               </svg>
             </div>
 
-            <button id="btnStart" class="btn">開始盤點</button>
+            <button id="btnStart" class="btn">開始測驗</button>
             <div class="spacer"></div>
             <button id="btnToPrefs" class="btn secondary">調整偏好</button>
           </div>
@@ -1488,7 +1488,7 @@ function renderOverview(){
   const f = state.prefs.focus==="action" ? "行動" : "策略";
   const r = state.prefs.role==="individual" ? "個人" : (state.prefs.role==="manager" ? "主管" : "HR/顧問");
   $("#summaryPrefs").textContent = `${r}｜${t}｜偏${f}`;
-  $("#overviewTitle").textContent = `「${state.bankKey}」盤點概覽`;
+  $("#overviewTitle").textContent = `「${state.bankKey}」測驗概覽`;
 }
 
 function renderQuestion(){
@@ -1824,7 +1824,7 @@ function bind(){
     const dimsTxt = r.dimsOrder.map(d => `- ${d}：${r.dimStars[d]}★`).join("\n");
 
     const text =
-`我的能力盤點結果（Beta Demo｜無後端）
+`我的能力測驗結果（Beta Demo｜無後端）
 主題：${state.bankKey}
 總星等：${r.overallStars}★
 可信度：${Math.round(r.confidence*100)}%（已回答 ${r.answered}/${r.totalQ}）
@@ -1892,4 +1892,5 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 </body>
 </html>
+
 
