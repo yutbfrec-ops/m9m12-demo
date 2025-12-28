@@ -446,7 +446,59 @@
   box-shadow: none !important;
 }
 
-    
+    /* ===== Single gray frame fix (only .phone + .bezel) ===== */
+:root{
+  --frame-gray-1:#7b8493;   /* 上淺灰 */
+  --frame-gray-2:#4b5563;   /* 下深灰 */
+  --frame-shadow: 0 18px 50px rgba(0,0,0,.22);
+  --frame-pad: 14px;        /* 你的 .phone 原本 padding 是 14px */
+  --frame-radius: 34px;     /* 你的 .phone 原本 radius 是 34px */
+}
+
+/* 外框：只留灰框 */
+.phone{
+  background: linear-gradient(180deg,var(--frame-gray-1),var(--frame-gray-2)) !important;
+  box-shadow: var(--frame-shadow) !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+
+  /* 保留你原本框體尺寸設定 */
+  padding: var(--frame-pad) !important;
+  border-radius: var(--frame-radius) !important;
+
+  /* 這兩個很重要：避免內外層陰影造成第二圈 */
+  outline: none !important;
+}
+
+/* 內層：把「第二圈黑邊/陰影」清掉，讓它只是白色螢幕容器 */
+.bezel{
+  background: #fff !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+
+  /* 內層圓角 = 外層圓角 - padding，避免露出第二圈 */
+  border-radius: calc(var(--frame-radius) - var(--frame-pad)) !important;
+
+  overflow: hidden !important; /* 讓內容不會溢出到框邊形成假邊 */
+}
+
+/* 常見：黑邊是 bezel 的 ::before/::after 畫出來的，一併清掉 */
+.bezel::before,
+.bezel::after{
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* 手機瀏覽器：框接近滿版但仍保留 */
+@media (max-width: 520px){
+  body{ padding: 8px !important; }
+  .phone{
+    width: min(96vw, 520px) !important;
+    margin: 8px auto !important;
+  }
+}
+
   </style>
 </head>
 <body>
@@ -1997,6 +2049,7 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 </body>
 </html>
+
 
 
 
