@@ -342,6 +342,34 @@
     .small{font-size:12px; color:#64748B; line-height:1.45;}
     .muted{color:#64748B;}
     .divider{height:1px; background:var(--line); margin:12px 0;}
+
+    /* === Frame theme: change black frame to gray frame === */
+:root{
+  --frame-outer: #4b5563;   /* 深灰外框 */
+  --frame-inner: #111827;   /* 內緣更深一點，保留層次 */
+  --frame-shadow: 0 18px 50px rgba(0,0,0,.22);
+}
+
+/* 你如果原本是 .phone-frame / .device / .mockup，改成你的 class */
+.phone{
+  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,.08)),
+              radial-gradient(1200px 600px at 30% 10%, rgba(255,255,255,.20), rgba(0,0,0,0)),
+              var(--frame-outer) !important;
+  box-shadow: var(--frame-shadow) !important;
+}
+
+/* 如果你有外框的「邊」是用 border 做的，也一起改 */
+.phone{
+  border: 1px solid rgba(255,255,255,.10) !important;
+}
+
+/* 內側那圈（若你有內層容器像 .phone__inner / .screen-wrap） */
+.phone .screen,
+.phone .app,
+.phone .phone-screen{
+  border-radius: 28px !important; /* 保留圓角感 */
+}
+
   </style>
 </head>
 <body>
@@ -1892,3 +1920,4 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 </body>
 </html>
+
