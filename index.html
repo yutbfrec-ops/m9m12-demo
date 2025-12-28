@@ -408,6 +408,45 @@
   }
 }
 
+    /* ===== Fix: remove double bezel (black + gray) and keep ONE gray frame ===== */
+:root{
+  --frame-gray-1:#7b8493;  /* 亮灰 */
+  --frame-gray-2:#4b5563;  /* 深灰 */
+  --frame-shadow: 0 18px 50px rgba(0,0,0,.22);
+}
+
+/* 1) OUTER FRAME: force it to gray (cover black/navy shell) */
+.phone, .device, .mockup, .iphone, .phone-frame, .device-frame, .shell, .frame{
+  background: linear-gradient(180deg,var(--frame-gray-1),var(--frame-gray-2)) !important;
+  box-shadow: var(--frame-shadow) !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+}
+
+/* 2) INNER BEZEL LAYER: neutralize the 2nd ring (background/border/shadow) */
+.phone .bezel, .device .bezel, .mockup .bezel, .iphone .bezel,
+.phone .inner, .device .inner, .mockup .inner, .iphone .inner,
+.phone .bezel-ring, .device .bezel-ring, .mockup .bezel-ring, .iphone .bezel-ring,
+.phone .frame-inner, .device .frame-inner, .mockup .frame-inner, .iphone .frame-inner{
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* 3) PSEUDO ELEMENTS often draw an extra rim */
+.phone::before, .phone::after,
+.device::before, .device::after,
+.mockup::before, .mockup::after,
+.iphone::before, .iphone::after,
+.phone .bezel::before, .phone .bezel::after,
+.device .bezel::before, .device .bezel::after,
+.mockup .bezel::before, .mockup .bezel::after,
+.iphone .bezel::before, .iphone .bezel::after{
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+    
   </style>
 </head>
 <body>
@@ -1958,5 +1997,6 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 </body>
 </html>
+
 
 
