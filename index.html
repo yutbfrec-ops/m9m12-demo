@@ -1059,12 +1059,33 @@ function pickBottomDim(dims){
 /* =========================================================
    Helpers
    ========================================================= */
-function el(tag, cls, html){
+function el(tag, cls, ...parts){
   const e = document.createElement(tag);
-  if(cls) e.className = cls;
-  if(html !== undefined) e.innerHTML = html;
+  if (cls) e.className = cls;
+
+  for (const p of parts){
+    if (p === null || p === undefined) continue;
+
+    // 字串：允許帶 HTML（例如 <b>...）
+    if (typeof p === "string"){
+      e.insertAdjacentHTML("beforeend", p);
+      continue;
+    }
+
+    // 節點：直接 append
+    if (p instanceof Node){
+      e.appendChild(p);
+      continue;
+    }
+
+    // 其他型別：當文字塞進去
+    e.appendChild(document.createTextNode(String(p)));
+  }
   return e;
 }
+
+}
+  
 function renderStars(n){
   let out = "";
   for(let i=1;i<=5;i++){
@@ -1087,3 +1108,4 @@ function getHHMM(){
 </script>
 </body>
 </html>
+
