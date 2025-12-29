@@ -2,8 +2,8 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>M9/M12 Demo (Single-file)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>M9/M12 能力盤點 Beta（方案A｜多主題題庫｜單檔 Demo）</title>
   <style>
     :root{
       --bg:#F6F8FB;
@@ -22,46 +22,40 @@
     }
 
     *{box-sizing:border-box}
-    html,body{height:100%}
     body{
       margin:0;
       font-family: var(--font);
       color:var(--ink);
-      background:
-        radial-gradient(1100px 600px at 20% -20%, rgba(47,111,237,.12), transparent 60%),
-        radial-gradient(900px 500px at 95% 20%, rgba(245,158,11,.10), transparent 55%),
-        var(--bg);
+      background: radial-gradient(1100px 600px at 20% -20%, rgba(47,111,237,.12), transparent 60%),
+                  radial-gradient(900px 500px at 95% 20%, rgba(245,158,11,.10), transparent 55%),
+                  var(--bg);
       min-height:100vh;
       display:flex;
       align-items:center;
       justify-content:center;
-      padding:10px;
+      padding:24px;
     }
 
-    /* Phone mock */
+    /* "Phone" mock container */
     .phone{
-      width:min(460px, 98vw);
-      height:min(980px, 96vh);
-      background: linear-gradient(180deg, #6F7785, #3E4654); /* 灰框 */
+      width:min(420px, 96vw);
+      background:#0E1B2D;
       border-radius:34px;
       padding:14px;
       box-shadow: 0 18px 60px rgba(0,0,0,.20);
     }
     .bezel{
-      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(0,0,0,.12));
+      background: linear-gradient(180deg, #0B1626, #0C1A2E);
       border-radius:28px;
       padding:10px;
       position:relative;
-      height:100%;
     }
     .screen{
       background: linear-gradient(180deg, #FFFFFF, #F7FAFF);
       border-radius:22px;
+      min-height:740px;
       overflow:hidden;
       position:relative;
-      height:100%;
-      display:flex;
-      flex-direction:column;
     }
     .statusbar{
       height:44px;
@@ -73,219 +67,346 @@
       font-weight:600;
       font-size:13px;
       opacity:.9;
-      flex:0 0 auto;
     }
-    .status-icons{display:flex;gap:10px;align-items:center;font-weight:700}
+    .status-icons{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      font-weight:700;
+    }
     .pill{
-      width:128px;height:28px;border-radius:18px;
-      background: rgba(17,24,39,.10);
-      margin:6px auto 10px;
-      flex:0 0 auto;
+      width:120px;
+      height:5px;
+      background:#0B1626;
+      opacity:.15;
+      border-radius:999px;
+      margin:10px auto 2px;
     }
 
-    .build{
-      position:absolute;
-      top:52px;
-      right:14px;
-      z-index:20;
-      font-size:12px;
-      color: rgba(0,0,0,.55);
-      background: rgba(255,255,255,.75);
-      border: 1px solid rgba(230,234,242,.9);
-      padding: 6px 8px;
-      border-radius: 10px;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      user-select:text;
-      white-space:nowrap;
+    /* Shared layout */
+    .wrap{
+      padding:18px 16px 20px;
+    }
+    h1{
+      margin:6px 0 12px;
+      font-size:26px;
+      line-height:1.15;
+      letter-spacing:-0.4px;
+    }
+    p{
+      margin:0 0 14px;
+      color:var(--muted);
+      line-height:1.5;
+      font-size:14px;
     }
 
-    /* Views */
-    .view{display:none; flex:1 1 auto; overflow:auto;}
-    .view.active{display:block}
-    .wrap{padding:18px 18px 22px}
-    h1{margin:0 0 10px; font-size:26px; line-height:1.2}
-    p{margin:8px 0 0; color:var(--muted); line-height:1.45}
-    .spacer{height:14px}
+    .card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:14px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, .05);
+    }
+
+    .row{display:flex; gap:12px; align-items:center;}
+    .col{display:flex; flex-direction:column; gap:10px;}
+    .spacer{height:10px;}
 
     .input{
       width:100%;
       border:1px solid var(--line);
-      background:#fff;
       border-radius:14px;
       padding:14px 14px;
       font-size:15px;
       outline:none;
-      box-shadow: 0 6px 16px rgba(16,24,40,.04);
+      background:#fff;
+    }
+    .input:focus{border-color: rgba(47,111,237,.5); box-shadow: 0 0 0 4px rgba(47,111,237,.10);}
+
+    .btn{
+      width:100%;
+      border:0;
+      border-radius:16px;
+      padding:14px 16px;
+      font-size:16px;
+      font-weight:700;
+      cursor:pointer;
+      background:var(--primary);
+      color:#fff;
+      box-shadow: 0 12px 28px rgba(47,111,237,.25);
+    }
+    .btn:hover{background:var(--primary-2);}
+    .btn.secondary{
+      background:#EEF3FF;
+      color:#1F3B7A;
+      box-shadow:none;
+      border:1px solid #DCE6FF;
+    }
+    .btn.ghost{
+      background:transparent;
+      color:#1F3B7A;
+      border:1px solid #DCE6FF;
+      box-shadow:none;
     }
 
-    .chips{display:flex;flex-wrap:wrap;gap:10px}
+    .linkrow{
+      display:flex; align-items:center; justify-content:space-between;
+      color:#1F3B7A;
+      font-weight:700;
+      font-size:14px;
+      padding:12px 6px;
+      cursor:pointer;
+      user-select:none;
+    }
+    .linkrow span{color:#1F3B7A}
+    .chev{opacity:.7}
+
+    .chips{display:flex; gap:10px; flex-wrap:wrap;}
     .chip{
-      border:1px solid var(--line);
-      background:#fff;
       padding:10px 12px;
       border-radius:999px;
-      font-size:13px;
+      border:1px solid #DCE2EE;
+      background:#fff;
       cursor:pointer;
+      font-size:13px;
+      font-weight:700;
+      color:#334155;
       user-select:none;
       transition:.15s;
     }
-    .chip:hover{border-color:#CFD6E6}
     .chip.active{
       border-color: rgba(47,111,237,.55);
       background: rgba(47,111,237,.10);
       color:#1F56C5;
-      font-weight:700;
     }
 
-    .btn{
-      width:100%;
-      border:none;
-      border-radius:16px;
-      padding:14px 14px;
-      background: linear-gradient(180deg, var(--primary), var(--primary-2));
-      color:#fff;
-      font-weight:800;
-      font-size:15px;
-      cursor:pointer;
-      box-shadow: 0 14px 30px rgba(47,111,237,.24);
-    }
-    .btn.ghost{
-      background:#fff;
-      color:var(--ink);
-      border:1px solid var(--line);
-      box-shadow:none;
-      font-weight:700;
-    }
-    .btn:active{transform: translateY(1px)}
-    .btnrow{display:flex; gap:10px}
-    .btnrow .btn{width:50%}
-
-    .linkrow{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:12px 12px;
-      border:1px solid var(--line);
-      border-radius:14px;
-      background:#fff;
-      cursor:pointer;
-      user-select:none;
-    }
-    .chev{color:var(--muted);font-size:18px}
-
-    .card{
-      border:1px solid var(--line);
-      border-radius:16px;
-      background:var(--card);
-      padding:14px 14px;
-      box-shadow: 0 8px 20px rgba(16,24,40,.06);
-    }
-    .row{display:flex;align-items:center;justify-content:space-between;gap:10px}
-    .kpi{font-weight:800}
-    .small{font-size:12.5px;color:var(--muted);line-height:1.4}
-
+    /* Top nav */
     .topnav{
-      position:sticky; top:0;
-      background: rgba(255,255,255,.82);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border-bottom:1px solid rgba(230,234,242,.7);
-      padding:10px 12px;
       display:flex;
       align-items:center;
       justify-content:space-between;
-      z-index:5;
+      padding:0 16px 6px;
     }
     .back{
-      display:flex;align-items:center;gap:6px;
-      color:var(--primary-2);
-      font-weight:800;
-      cursor:pointer;
-      user-select:none;
+      display:flex; align-items:center; gap:8px;
+      font-weight:800; color:#1F3B7A;
+      cursor:pointer; user-select:none;
     }
-    .step{color:var(--muted);font-weight:800;font-size:13px}
-
-    .qtitle{font-weight:900;font-size:18px;margin:0 0 6px}
-    .qdesc{margin:0;color:var(--muted);font-size:13.5px;line-height:1.45}
-
-    .opt{
-      border:1px solid var(--line);
-      background:#fff;
-      border-radius:16px;
-      padding:12px 12px;
-      cursor:pointer;
-      user-select:none;
-      transition:.15s;
-    }
-    .opt:hover{border-color:#CFD6E6}
-    .opt.selected{
-      border-color: rgba(47,111,237,.55);
-      background: rgba(47,111,237,.10);
+    .back svg{opacity:.8}
+    .step{
+      font-size:13px; color:#64748B; font-weight:700;
     }
 
-    .bar{
-      height:10px;
-      border-radius:999px;
+    /* Progress bar */
+    .progress{
+      height:8px;
       background:#EEF2FF;
+      border-radius:999px;
       overflow:hidden;
-      border:1px solid rgba(230,234,242,.7);
+      border:1px solid #E1E7FF;
     }
-    .bar > div{height:100%; background: rgba(47,111,237,.65); width:0%}
-
-    .stars{display:flex; gap:4px; align-items:center}
-    .star{font-size:14px; opacity:.25}
-    .star.on{opacity:1}
-
-    @media (max-width:520px){
-      body{ padding:6px; }
-      .phone{ width: calc(100vw - 8px); height: calc(100vh - 8px); border-radius: 32px; }
-      .bezel{ border-radius: 26px; }
-      .screen{ border-radius: 20px; }
+    .bar{
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, var(--primary), #60A5FA);
+      border-radius:999px;
+      transition: width .25s ease;
     }
+
+    /* Illustration */
+    .illus{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:10px 0 2px;
+    }
+    .illus svg{
+      width: 240px;
+      max-width: 92%;
+      height:auto;
+    }
+
+    /* Question options */
+    .option{
+      width:100%;
+      text-align:left;
+      padding:13px 12px;
+      border-radius:16px;
+      border:1px solid #DCE2EE;
+      background:#fff;
+      cursor:pointer;
+      font-weight:750;
+      color:#0F172A;
+      line-height:1.35;
+      transition:.12s;
+    }
+    .option:hover{border-color: rgba(47,111,237,.45); box-shadow: 0 0 0 4px rgba(47,111,237,.08);}
+    .option.selected{
+      border-color: rgba(47,111,237,.55);
+      background: rgba(47,111,237,.08);
+    }
+    .hint{
+      font-size:12px;
+      color:#64748B;
+      display:flex;
+      gap:8px;
+      align-items:flex-start;
+      padding:10px 12px;
+      background:#F7FAFF;
+      border:1px solid #E6EEFF;
+      border-radius:16px;
+    }
+
+    /* Loading */
+    .loadingSteps{
+      display:flex; flex-direction:column; gap:14px;
+    }
+    .stepRow{
+      display:flex; flex-direction:column; gap:8px;
+    }
+    .stepTitle{
+      font-weight:850; color:#1F3B7A;
+    }
+    .spinner{
+      width:26px; height:26px;
+      border-radius:999px;
+      border:3px solid #DCE6FF;
+      border-top-color: var(--primary);
+      animation: spin 1s linear infinite;
+      margin: 14px auto 0;
+    }
+    @keyframes spin {to{transform:rotate(360deg)}}
+
+    /* Results */
+    .stars{display:flex; gap:4px; align-items:center;}
+    .star{
+      width:18px; height:18px;
+      fill:#E5E7EB;
+    }
+    .star.on{fill: var(--accent);}
+    .kpi{
+      display:flex; align-items:flex-end; gap:10px;
+    }
+    .bigNum{font-size:56px; font-weight:950; line-height:1;}
+    .bigLabel{font-weight:900; color:#1F3B7A; margin-bottom:6px;}
+    .dimRow{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px; padding:8px 0;
+    }
+    .dimName{font-weight:850; color:#334155; font-size:14px;}
+    .dimStars .star{width:14px;height:14px}
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 12px;
+      border-radius:999px;
+      background: rgba(22,163,74,.10);
+      color:#14532D;
+      font-weight:850;
+      border:1px solid rgba(22,163,74,.20);
+      font-size:13px;
+    }
+
+    .ctaRow{display:flex; gap:10px;}
+    .ctaRow .btn{flex:1}
+
+    /* View switching */
+    .view{
+      display:none;
+      animation: fadeUp .18s ease;
+    }
+    .view.active{display:block;}
+    @keyframes fadeUp{
+      from{opacity:0; transform: translateY(6px);}
+      to{opacity:1; transform: translateY(0);}
+    }
+
+    /* Bottom safe area */
+    .homebar{
+      position:absolute;
+      left:0; right:0; bottom:0;
+      height:26px;
+      display:flex; align-items:center; justify-content:center;
+      background: linear-gradient(180deg, transparent, rgba(255,255,255,.96));
+    }
+    .homebar:before{
+      content:"";
+      width:140px; height:5px;
+      border-radius:999px;
+      background:#0B1626;
+      opacity:.14;
+    }
+
+    /* Small helper */
+    .small{font-size:12px; color:#64748B; line-height:1.45;}
+    .muted{color:#64748B;}
+    .divider{height:1px; background:var(--line); margin:12px 0;}
   </style>
 </head>
-
 <body>
   <div class="phone">
     <div class="bezel">
       <div class="screen">
         <div class="statusbar">
           <div id="clock">9:41</div>
-          <div class="status-icons"><span>▮▮▮</span><span>⌁</span><span>🔋</span></div>
+          <div class="status-icons">
+            <span>▮▮▮</span><span>⌁</span><span>🔋</span>
+          </div>
         </div>
         <div class="pill"></div>
-        <div class="build" id="buildLabel"></div>
 
-        <!-- S1 -->
+        <!-- S1: Target input -->
         <section id="v-s1" class="view active">
           <div class="wrap">
             <h1>你想盤點哪個<br/>職場能力？</h1>
-            <p>像做「旅遊書」一樣，3–5 分鐘完成盤點，立即拿到星等與建議。</p>
+            <p>使用3–5 分鐘完成盤點，立即拿到星等與建議。</p>
+
+            <input id="targetInput" class="input" placeholder="e.g. 溝通協作 / 執行推進 / 問題解決 / 領導帶人" />
 
             <div class="spacer"></div>
-            <input id="targetInput" class="input" placeholder="例如：溝通協作 / 執行推進 / 問題解決 / 領導帶人" />
 
-            <div class="spacer"></div>
             <div class="chips" id="presetChips"></div>
 
             <div class="spacer"></div>
+
             <div id="advRow" class="linkrow">
               <span>進階設定</span>
               <span class="chev">›</span>
             </div>
 
-            <div class="spacer"></div>
-            <button id="btnToOverview1" class="btn">開始盤點</button>
+            <div class="illus" aria-hidden="true">
+              <svg viewBox="0 0 520 300" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="g1" x1="0" x2="1">
+                    <stop offset="0" stop-color="#2F6FED" stop-opacity=".18"/>
+                    <stop offset="1" stop-color="#60A5FA" stop-opacity=".06"/>
+                  </linearGradient>
+                </defs>
+                <circle cx="250" cy="135" r="120" fill="url(#g1)"/>
+                <rect x="145" y="155" width="230" height="110" rx="22" fill="#FFFFFF" stroke="#DCE2EE"/>
+                <rect x="175" y="180" width="170" height="14" rx="7" fill="#E6EEFF"/>
+                <rect x="175" y="205" width="130" height="14" rx="7" fill="#E6EEFF"/>
+                <rect x="175" y="230" width="90" height="14" rx="7" fill="#E6EEFF"/>
+                <circle cx="110" cy="220" r="44" fill="#FFF7ED" stroke="#FED7AA"/>
+                <path d="M98 218c18-4 22-19 22-19 8 14 5 31-10 38-13 6-27 0-32-9" fill="none" stroke="#F59E0B" stroke-width="6" stroke-linecap="round"/>
+                <path d="M430 98c0 18-14 32-32 32s-32-14-32-32 14-32 32-32 32 14 32 32Z" fill="#EEF3FF" stroke="#DCE6FF"/>
+                <path d="M387 98h22" stroke="#2F6FED" stroke-width="6" stroke-linecap="round"/>
+                <path d="M398 87v22" stroke="#2F6FED" stroke-width="6" stroke-linecap="round"/>
+              </svg>
+            </div>
+
+            <button id="btnToOverview" class="btn">下一步</button>
 
             <div class="spacer"></div>
             <div class="small">
-              右上角顯示版本號（Build）＋目前模型（M9/M12），避免交付版本混亂。
+              <strong>提示：</strong>這是 Beta Demo（無後端）。資料只存在你本機瀏覽器（可清除）。<br/>
+              <span class="muted">每個主題會各自保存草稿（互不覆蓋）。</span>
             </div>
           </div>
         </section>
 
-        <!-- S2 -->
+        <!-- S2: Advanced settings -->
         <section id="v-s2" class="view">
           <div class="topnav">
             <div class="back" data-back="v-s1">
@@ -297,55 +418,40 @@
           </div>
 
           <div class="wrap">
-            <!-- 模型切換：放最上面 -->
-            <div class="card">
-              <div class="row" style="align-items:flex-start">
-                <div>
-                  <div class="kpi">模型切換</div>
-                  <div class="small" style="margin-top:4px">先決定用 M9 或 M12，再調整報告風格。</div>
-                </div>
-              </div>
-              <div class="spacer"></div>
-              <div class="chips" id="modelChips">
-                <div class="chip model" data-model="M9">M9（職場核心）</div>
-                <div class="chip model" data-model="M12">M12（管理/成長）</div>
-              </div>
-            </div>
-
-            <div class="spacer"></div>
-
             <h1>報告想偏什麼<br/>風格？</h1>
             <p>你可以先用預設，之後再調整（不影響完成）。</p>
 
-            <div class="spacer"></div>
-
             <div class="card">
-              <div class="kpi">語氣</div>
-              <div class="spacer"></div>
-              <div class="chips">
-                <div class="chip pref" data-key="tone" data-val="direct">直接清楚</div>
-                <div class="chip pref" data-key="tone" data-val="warm">溫和鼓勵</div>
-                <div class="chip pref" data-key="tone" data-val="formal">商務正式</div>
-              </div>
+              <div class="col">
+                <div>
+                  <div class="muted" style="font-weight:800; font-size:13px; margin-bottom:8px;">報告語氣</div>
+                  <div class="chips">
+                    <div class="chip pref" data-key="tone" data-val="direct">直接清楚</div>
+                    <div class="chip pref" data-key="tone" data-val="gentle">溫和引導</div>
+                  </div>
+                </div>
 
-              <div class="spacer"></div>
+                <div class="divider"></div>
 
-              <div class="kpi">焦點</div>
-              <div class="spacer"></div>
-              <div class="chips">
-                <div class="chip pref" data-key="focus" data-val="action">可執行建議</div>
-                <div class="chip pref" data-key="focus" data-val="strategy">策略脈絡</div>
-                <div class="chip pref" data-key="focus" data-val="coach">教練引導</div>
-              </div>
+                <div>
+                  <div class="muted" style="font-weight:800; font-size:13px; margin-bottom:8px;">建議偏好</div>
+                  <div class="chips">
+                    <div class="chip pref" data-key="focus" data-val="strategy">偏策略</div>
+                    <div class="chip pref" data-key="focus" data-val="action">偏行動</div>
+                  </div>
+                </div>
 
-              <div class="spacer"></div>
+                <div class="divider"></div>
 
-              <div class="kpi">你的角色</div>
-              <div class="spacer"></div>
-              <div class="chips">
-                <div class="chip pref" data-key="role" data-val="individual">個人貢獻者</div>
-                <div class="chip pref" data-key="role" data-val="lead">帶人主管</div>
-                <div class="chip pref" data-key="role" data-val="owner">負責人/老闆</div>
+                <div>
+                  <div class="muted" style="font-weight:800; font-size:13px; margin-bottom:8px;">使用情境</div>
+                  <div class="chips">
+                    <div class="chip pref" data-key="role" data-val="individual">個人盤點</div>
+                    <div class="chip pref" data-key="role" data-val="manager">主管視角</div>
+                    <div class="chip pref" data-key="role" data-val="hr">HR/顧問</div>
+                  </div>
+                </div>
+
               </div>
             </div>
 
@@ -353,306 +459,835 @@
             <button id="btnToOverview2" class="btn">完成設定，開始</button>
 
             <div class="spacer"></div>
-            <div class="small"><strong>隱私：</strong>此 Demo 不上傳資料。草稿僅存在本機 localStorage。</div>
+            <div class="small">
+              <strong>隱私：</strong>不需要姓名。此 Demo 不上傳資料。
+            </div>
           </div>
         </section>
 
-        <!-- S3 -->
+        <!-- S3: Overview -->
         <section id="v-s3" class="view">
           <div class="topnav">
             <div class="back" data-back="v-s1">
               <svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M15.5 19 8.5 12l7-7"/></svg>
-              首頁
+              返回
             </div>
-            <div class="step">概覽</div>
+            <div class="step" id="overviewStep">概覽</div>
             <div style="width:48px"></div>
           </div>
 
           <div class="wrap">
-            <h1 id="ovTitle">主題：—</h1>
-            <p id="ovHint">—</p>
-
-            <div class="spacer"></div>
+            <h1 id="overviewTitle">能力盤點概覽</h1>
+            <p>你將回答幾個情境題。選「你平常的做法」即可。</p>
 
             <div class="card">
-              <div class="row">
-                <div class="kpi">進度</div>
-                <div class="small" id="ovProgress">0/8</div>
-              </div>
-              <div class="spacer"></div>
-              <div class="bar"><div id="ovBar"></div></div>
+              <div class="col">
+                <div class="row" style="justify-content:space-between">
+                  <div>
+                    <div class="muted" style="font-weight:850; font-size:13px;">主題</div>
+                    <div id="summaryTarget" style="font-weight:950; font-size:18px; margin-top:2px;">—</div>
+                    <div class="small" id="summaryHint" style="margin-top:6px;">—</div>
+                  </div>
+                  <div class="badge">約 3–5 分鐘</div>
+                </div>
 
-              <div class="spacer"></div>
-              <div class="row">
-                <div class="small" id="ovModel">模型：—</div>
-                <div class="small" id="ovTone">風格：—</div>
+                <div class="divider"></div>
+
+                <div class="row" style="justify-content:space-between">
+                  <div class="muted" style="font-weight:850;">題數</div>
+                  <div style="font-weight:950;" id="summaryQCount">—</div>
+                </div>
+                <div class="row" style="justify-content:space-between">
+                  <div class="muted" style="font-weight:850;">模式</div>
+                  <div style="font-weight:950;" id="summaryPrefs">—</div>
+                </div>
+
+                <div class="divider"></div>
+                <div class="small">
+                  <strong>提醒：</strong>這份結果用於「決策參考」，請結合你實際工作情境判斷。
+                </div>
+              </div>
+            </div>
+
+            <div class="illus" aria-hidden="true">
+              <svg viewBox="0 0 520 300" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="270" cy="135" r="120" fill="rgba(47,111,237,.12)"/>
+                <path d="M165 210c18-30 50-52 88-52 46 0 85 33 95 78" fill="none" stroke="#2F6FED" stroke-width="8" stroke-linecap="round"/>
+                <path d="M210 210c10-18 26-30 45-30 23 0 42 16 48 38" fill="none" stroke="#60A5FA" stroke-width="8" stroke-linecap="round"/>
+                <rect x="120" y="214" width="280" height="56" rx="18" fill="#FFFFFF" stroke="#DCE2EE"/>
+                <rect x="150" y="235" width="180" height="12" rx="6" fill="#E6EEFF"/>
+                <circle cx="385" cy="244" r="14" fill="#FDE68A"/>
+              </svg>
+            </div>
+
+            <button id="btnStart" class="btn">開始盤點</button>
+            <div class="spacer"></div>
+            <button id="btnToPrefs" class="btn secondary">調整偏好</button>
+          </div>
+        </section>
+
+        <!-- S4: Question -->
+        <section id="v-s4" class="view">
+          <div class="topnav">
+            <div class="back" id="btnBackQ">
+              <svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M15.5 19 8.5 12l7-7"/></svg>
+              返回
+            </div>
+            <div class="step" id="qStep">第 1 題</div>
+            <div style="width:48px"></div>
+          </div>
+
+          <div class="wrap">
+            <div class="progress"><div class="bar" id="qBar"></div></div>
+            <div class="spacer"></div>
+
+            <h1 id="qTitle">—</h1>
+            <p id="qDesc">—</p>
+
+            <div class="col" id="options"></div>
+
+            <div class="spacer"></div>
+            <div class="hint">
+              <div style="font-weight:950;">💡</div>
+              <div>
+                選「最接近你平常的做法」。如果你真的不確定，可以選「不確定」，但結果可信度會降低。
               </div>
             </div>
 
             <div class="spacer"></div>
+            <button id="btnUnsure" class="btn ghost">不確定（跳過此題）</button>
+          </div>
+        </section>
 
-            <button id="btnStartQuiz" class="btn">開始答題</button>
-            <div class="spacer"></div>
-            <div class="btnrow">
-              <button id="btnResetTopic" class="btn ghost">清除此主題草稿</button>
-              <button id="btnResetAll" class="btn ghost">清除全部</button>
+        <!-- S5: Confirm -->
+        <section id="v-s5" class="view">
+          <div class="topnav">
+            <div class="back" data-back="v-s4">
+              <svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M15.5 19 8.5 12l7-7"/></svg>
+              返回
             </div>
+            <div class="step">完成</div>
+            <div style="width:48px"></div>
+          </div>
+
+          <div class="wrap">
+            <h1>已完成回答，<br/>要生成結果嗎？</h1>
+            <p>你可以回到上一題修改。也可以直接生成星等與洞察。</p>
+
+            <div class="card">
+              <div class="row" style="justify-content:space-between">
+                <div class="muted" style="font-weight:850;">已回答</div>
+                <div style="font-weight:950;" id="answeredCount">—</div>
+              </div>
+              <div class="row" style="justify-content:space-between; margin-top:10px;">
+                <div class="muted" style="font-weight:850;">主題</div>
+                <div style="font-weight:950;" id="confirmTarget">—</div>
+              </div>
+            </div>
+
+            <div class="spacer"></div>
+            <button id="btnGenerate" class="btn">生成我的結果</button>
+            <div class="spacer"></div>
+            <button id="btnRestart" class="btn secondary">重新開始（本主題）</button>
 
             <div class="spacer"></div>
             <div class="small">
-              你切換 M9/M12 不會互相覆蓋草稿：儲存 key = <code>model + topic</code>。
+              生成分兩步：先計算星等 → 再生成洞察（更像商業工具的可信流程）。
             </div>
           </div>
         </section>
 
-        <!-- S4 -->
-        <section id="v-s4" class="view">
-          <div class="topnav">
-            <div class="back" id="btnBackToOv">
-              <svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M15.5 19 8.5 12l7-7"/></svg>
-              概覽
-            </div>
-            <div class="step" id="qStep">1/8</div>
-            <div style="width:48px"></div>
-          </div>
-
-          <div class="wrap">
-            <div class="card">
-              <div class="row">
-                <div class="kpi" id="qDim">—</div>
-                <div class="small" id="qId">—</div>
-              </div>
-              <div class="spacer"></div>
-              <div class="qtitle" id="qTitle">—</div>
-              <p class="qdesc" id="qDesc">—</p>
-            </div>
-
-            <div class="spacer"></div>
-            <div id="optBox" style="display:flex;flex-direction:column;gap:10px"></div>
-
-            <div class="spacer"></div>
-            <div class="btnrow">
-              <button id="btnPrev" class="btn ghost">上一題</button>
-              <button id="btnNext" class="btn">下一步</button>
-            </div>
-
-            <div class="spacer"></div>
-            <div class="small" id="qTip">可選「不確定」：會計入不確定次數，但不影響你繼續答題。</div>
-          </div>
-        </section>
-
-        <!-- S5 -->
-        <section id="v-s5" class="view">
-          <div class="topnav">
-            <div class="back" data-back="v-s3">
-              <svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M15.5 19 8.5 12l7-7"/></svg>
-              概覽
-            </div>
-            <div class="step">結果</div>
-            <div style="width:48px"></div>
-          </div>
-
-          <div class="wrap">
-            <h1 id="rsTitle">你的星等：—</h1>
-            <p id="rsSub">—</p>
-
-            <div class="spacer"></div>
-            <div class="card" id="rsDims"></div>
-
-            <div class="spacer"></div>
-            <button id="btnToReport" class="btn">生成 AI 報告</button>
-
-            <div class="spacer"></div>
-            <div class="small" id="rsMeta">—</div>
-          </div>
-        </section>
-
-        <!-- S6 -->
+        <!-- S6: Loading -->
         <section id="v-s6" class="view">
           <div class="topnav">
-            <div class="back" data-back="v-s5">
+            <div class="back" id="btnCancelLoading">
               <svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M15.5 19 8.5 12l7-7"/></svg>
-              結果
+              返回
             </div>
-            <div class="step">AI 報告</div>
+            <div class="step">生成中</div>
             <div style="width:48px"></div>
           </div>
 
           <div class="wrap">
-            <h1>你的能力盤點報告</h1>
-            <p id="rpSub">—</p>
+            <h1 id="loadingTitle">正在生成報告…</h1>
+            <p id="loadingDesc">請稍候，這只是一個 Demo 的模擬流程。</p>
+
+            <div class="card">
+              <div class="loadingSteps">
+                <div class="stepRow">
+                  <div class="stepTitle" id="ls1">Step 1. 正在計算星等…</div>
+                  <div class="progress"><div class="bar" id="lsBar1"></div></div>
+                </div>
+                <div class="stepRow">
+                  <div class="stepTitle" id="ls2">Step 2. 正在生成洞察與建議…</div>
+                  <div class="progress"><div class="bar" id="lsBar2"></div></div>
+                </div>
+              </div>
+              <div class="spinner"></div>
+              <div class="small" style="margin-top:12px;">
+                <strong>提示：</strong>結果僅供決策參考，不做自動執行（Decision Support）。
+              </div>
+            </div>
 
             <div class="spacer"></div>
-            <div class="card" id="rpBody"></div>
-
-            <div class="spacer"></div>
-            <button class="btn ghost" data-back="v-s1">回到首頁</button>
+            <button id="btnSkipToResult" class="btn secondary">快速跳到結果（Demo）</button>
           </div>
         </section>
 
+        <!-- S7: Result summary -->
+        <section id="v-s7" class="view">
+          <div class="topnav">
+            <div class="back" data-back="v-s1">
+              <svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M15.5 19 8.5 12l7-7"/></svg>
+              回首頁
+            </div>
+            <div class="step">結果摘要</div>
+            <div style="width:48px"></div>
+          </div>
+
+          <div class="wrap">
+            <h1>你的結果摘要</h1>
+            <p>先看重點卡片，再決定要不要展開完整版。</p>
+
+            <div class="card">
+              <div class="kpi">
+                <div class="bigNum" id="overallNum">—</div>
+                <div style="flex:1">
+                  <div class="bigLabel" id="overallLabel">—</div>
+                  <div class="stars" id="overallStars"></div>
+                  <div class="small" id="confidenceLine" style="margin-top:6px;">—</div>
+                </div>
+              </div>
+
+              <div class="divider"></div>
+              <div class="col" id="dimList"></div>
+            </div>
+
+            <div class="spacer"></div>
+
+            <div class="card">
+              <div class="muted" style="font-weight:900; margin-bottom:8px;">三個洞察</div>
+              <div class="col" id="insights"></div>
+              <div class="divider"></div>
+              <div class="muted" style="font-weight:900; margin-bottom:8px;">立即行動（今天就能做）</div>
+              <div id="actionNow" style="font-weight:850;"></div>
+            </div>
+
+            <div class="spacer"></div>
+
+            <div class="ctaRow">
+              <button id="btnFullReport" class="btn">展開完整版</button>
+              <button id="btnShare" class="btn secondary">分享摘要</button>
+            </div>
+
+            <div class="spacer"></div>
+            <button id="btnResetAll" class="btn ghost">清除草稿/重做</button>
+
+            <div class="spacer"></div>
+            <div class="small">
+              <strong>商業化掛點：</strong>完整版可加「30 天行動計畫」「團隊對照」「顧問訪談提綱」。
+            </div>
+          </div>
+        </section>
+
+        <!-- S8: Full report (simple) -->
+        <section id="v-s8" class="view">
+          <div class="topnav">
+            <div class="back" data-back="v-s7">
+              <svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M15.5 19 8.5 12l7-7"/></svg>
+              返回
+            </div>
+            <div class="step">完整版</div>
+            <div style="width:48px"></div>
+          </div>
+
+          <div class="wrap">
+            <h1>完整版報告</h1>
+            <p>這裡先做「閱讀器」雛形（可折疊章節、可加顧問版內容）。</p>
+
+            <div class="card">
+              <div style="font-weight:950; font-size:16px;" id="fullTitle">—</div>
+              <div class="small" style="margin-top:6px;" id="fullMeta">—</div>
+              <div class="divider"></div>
+
+              <div class="col">
+                <div>
+                  <div style="font-weight:950;">A. 你的能力輪廓</div>
+                  <div class="small" id="fullA"></div>
+                </div>
+                <div class="divider"></div>
+                <div>
+                  <div style="font-weight:950;">B. 你最常遇到的風險情境</div>
+                  <div class="small" id="fullB"></div>
+                </div>
+                <div class="divider"></div>
+                <div>
+                  <div style="font-weight:950;">C. 改善策略（3 條）</div>
+                  <div class="small" id="fullC"></div>
+                </div>
+                <div class="divider"></div>
+                <div>
+                  <div style="font-weight:950;">D. 30 天行動計畫（示例）</div>
+                  <div class="small" id="fullD"></div>
+                </div>
+                <div class="divider"></div>
+                <div>
+                  <div style="font-weight:950;">E. 方法與可信度（簡短）</div>
+                  <div class="small" id="fullE"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="spacer"></div>
+            <button class="btn secondary" id="btnBackToSummary">回摘要頁</button>
+          </div>
+        </section>
+
+        <div class="homebar"></div>
       </div>
     </div>
   </div>
 
 <script>
 /** ======================================================
- *  Build / Model
+ *  多主題題庫（Hard-code, no API）
+ *  - 每個主題 8 題（你可自行改題/改權重/增刪題）
+ *  - 每題都有 dim 與 options(score 1..5)
  * ====================================================== */
-const BUILD_LABEL_BASE = "UIA-BANKB v1.0.2 2025-12-30";
-
-/** ======================================================
- *  題庫（Hard-code）
- *  - 每個主題 8 題
- * ====================================================== */
-const QUESTION_BANK_M9 = {
+const QUESTION_BANK = {
   "溝通協作": {
     hint: "聚焦：訊息清楚、共識對齊、跨部門推進。",
     questions: [
-      {id:"C1", title:"跨部門協作卡住", desc:"對方回覆慢、需求反覆，進度落後。你通常怎麼做？", dim:"協作推進",
-        options:[{text:"先釐清目標/責任分工，約定最小可交付（MVP）",score:5},{text:"先記錄起來等例會再談",score:3},{text:"要求對方照原計畫做",score:2},{text:"自己做完對方配合即可",score:1}]},
-      {id:"C2", title:"訊息被誤解造成重工", desc:"交辦內容被理解成另一件事，造成重工。你會怎麼改善？", dim:"溝通清晰",
-        options:[{text:"改用『確認回覆』：對方復述重點+交付物",score:5},{text:"加長文字說明避免誤差",score:3},{text:"之後都口頭交辦就好",score:2},{text:"算了以後我自己做",score:1}]},
-      {id:"C3", title:"會議無法收斂", desc:"討論發散、最後沒結論。你會怎麼處理？", dim:"會議收斂",
-        options:[{text:"先定議程/決策題/時間盒，最後輸出結論與Action",score:5},{text:"讓大家多聊聊總會有共識",score:3},{text:"直接用你的方案拍板",score:2},{text:"先散會改天再說",score:1}]},
-      {id:"C4", title:"對齊期望", desc:"同一件事各自解讀不同，造成爭執。你會怎麼做？", dim:"共識對齊",
-        options:[{text:"把目標、範圍、驗收標準寫成 1 頁對齊",score:5},{text:"再多解釋一次你的想法",score:3},{text:"交給主管裁決",score:2},{text:"先放著不要碰",score:1}]},
-      {id:"C5", title:"衝突處理", desc:"合作夥伴情緒上來、互相指責。你會怎麼做？", dim:"衝突管理",
-        options:[{text:"先拆事實/影響/需求，拉回共同目標再談方案",score:5},{text:"先安撫情緒，等冷靜再說",score:3},{text:"誰大聲聽誰的",score:2},{text:"避免衝突，先退出",score:1}]},
-      {id:"C6", title:"向上溝通", desc:"你需要主管支持，但他很忙。你會怎麼提？", dim:"向上溝通",
-        options:[{text:"用 30 秒 TL;DR：選項/成本/建議，讓他快決策",score:5},{text:"把背景全部講清楚",score:3},{text:"一直追問直到回覆",score:2},{text:"算了不提了",score:1}]},
-      {id:"C7", title:"跨文化/跨地區合作", desc:"語言/時區不同，容易誤解延誤。你會怎麼做？", dim:"協作機制",
-        options:[{text:"建立固定節奏：同步/異步規則與模板",score:5},{text:"看情況再調整",score:3},{text:"要求對方配合你時間",score:2},{text:"各做各的",score:1}]},
-      {id:"C8", title:"回饋與迭代", desc:"對方給的回饋很抽象。你會怎麼把它變可行動？", dim:"回饋轉化",
-        options:[{text:"追問具體例子+期望結果，轉成可驗收清單",score:5},{text:"先照感覺改改看",score:3},{text:"覺得不重要就忽略",score:2},{text:"太麻煩先放著",score:1}]},
+      {
+        id:"C1",
+        title:"情境：跨部門協作卡住",
+        desc:"你在推進專案時，對方部門回覆慢、需求反覆，進度開始落後。你通常會怎麼做？",
+        dim:"協作推進",
+        options:[
+          {text:"先釐清彼此目標與責任分工，約定最小可交付版本（MVP）", score:5},
+          {text:"把問題先記錄起來，等下次例會再一起討論", score:3},
+          {text:"直接要求對方按你原本計畫做，避免更動造成成本", score:2},
+          {text:"先自己做完，對方配合即可", score:1}
+        ]
+      },
+      {
+        id:"C2",
+        title:"情境：訊息被誤解造成重工",
+        desc:"你交辦的訊息被同事理解成另一件事，導致重工。你會怎麼改善？",
+        dim:"溝通清晰",
+        options:[
+          {text:"用一句話寫清楚「目的/輸出/截止時間」，必要時附範例", score:5},
+          {text:"改用語音/電話講，文字太容易誤會", score:3},
+          {text:"覺得對方應該自己問清楚", score:2},
+          {text:"避免再交辦，自己做比較快", score:1}
+        ]
+      },
+      {
+        id:"C3",
+        title:"情境：會議結論各說各話",
+        desc:"會議結束後大家做法不一致，顯示共識沒有落地。你會？",
+        dim:"共識對齊",
+        options:[
+          {text:"會後 5 分鐘整理決議：誰/做什麼/何時，並請各方回覆確認", score:5},
+          {text:"等到有人做錯再提醒修正", score:3},
+          {text:"覺得大家應該都懂，不需要寫", score:2},
+          {text:"看誰先做就跟誰的做法", score:1}
+        ]
+      },
+      {
+        id:"C4",
+        title:"情境：對方一直丟回來要你改",
+        desc:"合作方一直說「不太對」但說不清楚。你會怎麼問？",
+        dim:"提問澄清",
+        options:[
+          {text:"問清楚評估標準：什麼算好/不好？給 2–3 個選項讓對方選", score:5},
+          {text:"請對方用語音講一遍", score:3},
+          {text:"再猜一次改改看", score:2},
+          {text:"覺得對方很難搞，先放著", score:1}
+        ]
+      },
+      {
+        id:"C5",
+        title:"情境：你要影響但沒權限",
+        desc:"你希望某件事被優先處理，但你沒有直接權限。你會怎麼推動？",
+        dim:"影響力",
+        options:[
+          {text:"整理利害關係人關注點，用對方在意的指標/風險去對齊", score:5},
+          {text:"請主管幫忙施壓", score:3},
+          {text:"發更多訊息提醒，總會有人回", score:2},
+          {text:"算了，反正不是你負責", score:1}
+        ]
+      },
+      {
+        id:"C6",
+        title:"情境：衝突升溫",
+        desc:"會議中同事語氣變尖銳，開始否定你的做法。你通常會？",
+        dim:"衝突處理",
+        options:[
+          {text:"先把爭點拉回『共同目標』，再拆成可驗證問題逐一處理", score:5},
+          {text:"先沉默，等對方冷靜後再聊", score:3},
+          {text:"立刻反駁，避免被誤解成你錯了", score:2},
+          {text:"直接結束討論，之後再說", score:2}
+        ]
+      },
+      {
+        id:"C7",
+        title:"情境：回饋很難聽但可能是真的",
+        desc:"你收到一段直接的批評回饋，你會怎麼處理？",
+        dim:"回饋吸收",
+        options:[
+          {text:"先確認事實與例子，再問「你希望我下次怎麼做？」", score:5},
+          {text:"先接受，之後再慢慢消化", score:3},
+          {text:"先解釋自己不是那個意思", score:2},
+          {text:"覺得對方針對你，不理會", score:1}
+        ]
+      },
+      {
+        id:"C8",
+        title:"情境：協作的節奏被打亂",
+        desc:"對方常臨時改需求，影響你交付。你會怎麼設規則？",
+        dim:"協作規則",
+        options:[
+          {text:"訂變更流程：截止點、影響評估、誰決策，讓改動有成本與節奏", score:5},
+          {text:"先配合，等累積到很多再說", score:3},
+          {text:"直接拒絕後續變更", score:2},
+          {text:"放棄溝通，自己想辦法處理", score:1}
+        ]
+      }
     ]
   },
 
   "執行推進": {
-    hint: "聚焦：拆解任務、節點控管、把事做完。",
+    hint: "聚焦：拆解目標、控節奏、交付與迭代。",
     questions: [
-      {id:"E1", title:"目標拆解", desc:"目標很大、大家不知道從哪開始。你會怎麼做？", dim:"拆解能力",
-        options:[{text:"拆成里程碑→任務→負責人→期限→驗收標準",score:5},{text:"先做再說邊做邊調",score:3},{text:"把目標丟給最強的人",score:2},{text:"等需求更清楚再動",score:1}]},
-      {id:"E2", title:"優先順序混亂", desc:"同時很多事都說很急。你會怎麼排？", dim:"優先排序",
-        options:[{text:"用影響×緊急×成本排序，對齊利害關係人",score:5},{text:"先做最容易的",score:3},{text:"誰催就先做誰",score:2},{text:"全部一起做",score:1}]},
-      {id:"E3", title:"進度延遲", desc:"快到 deadline 了，但進度落後。你會怎麼處理？", dim:"風險控管",
-        options:[{text:"先找瓶頸，縮範圍/加資源/調順序，更新預期",score:5},{text:"加班把它硬做完",score:3},{text:"先隱瞞，做出來再說",score:2},{text:"放著等別人救",score:1}]},
-      {id:"E4", title:"交付物品質不穩", desc:"同樣流程每次品質差很多。你會怎麼改善？", dim:"品質管理",
-        options:[{text:"建立檢查清單+範例+Review 節點",score:5},{text:"多提醒大家小心點",score:3},{text:"出事再修",score:2},{text:"改由你親自把關全部",score:1}]},
-      {id:"E5", title:"需求頻繁變更", desc:"需求一直改，團隊疲於奔命。你會怎麼做？", dim:"變更管理",
-        options:[{text:"建立變更流程：影響評估→決策→同步→版本化",score:5},{text:"照單全收先做",score:3},{text:"全部拒絕不改",score:2},{text:"先停工等需求不變",score:1}]},
-      {id:"E6", title:"協作工具混亂", desc:"檔案/任務散落各處。你會怎麼整理？", dim:"系統化",
-        options:[{text:"統一工具與命名規則，固定週期整理與回顧",score:5},{text:"先用著，有空再整理",score:3},{text:"各自習慣就好",score:2},{text:"讓新人去整理",score:1}]},
-      {id:"E7", title:"跟進與催辦", desc:"有人拖延不交付。你會怎麼跟進？", dim:"推進力",
-        options:[{text:"確認阻礙→提供協助→重談期限→透明化進度",score:5},{text:"每天提醒一次",score:3},{text:"直接抱怨他不負責",score:2},{text:"算了我自己做",score:1}]},
-      {id:"E8", title:"復盤改進", desc:"專案結束後常重複犯錯。你會怎麼做？", dim:"持續改進",
-        options:[{text:"做復盤：做對/做錯/下次改，形成 SOP 或模板",score:5},{text:"口頭聊聊就好",score:3},{text:"怪罪某個人就結束",score:2},{text:"不復盤，繼續下一個",score:1}]},
+      {
+        id:"E1",
+        title:"情境：臨時插單干擾節奏",
+        desc:"主管臨時要你插一個急件，但你原本正在做更重要的任務。你會？",
+        dim:"優先順序",
+        options:[
+          {text:"確認急件價值與截止時間，提出調整清單請主管決定取捨", score:5},
+          {text:"先把急件做完，原本的事之後再補", score:3},
+          {text:"先拖著不做，等主管再提醒", score:2},
+          {text:"直接拒絕，因為你手上已有安排", score:2}
+        ]
+      },
+      {
+        id:"E2",
+        title:"情境：任務太大不知道從哪開始",
+        desc:"你接到一個模糊的任務：『把這件事做起來』。你會先做？",
+        dim:"拆解規劃",
+        options:[
+          {text:"先定義成功標準，拆成里程碑與最小可交付版本（MVP）", score:5},
+          {text:"先從最容易的部分做起，邊做邊看", score:3},
+          {text:"等更多資訊再開始", score:2},
+          {text:"直接做完整版本，避免重工", score:2}
+        ]
+      },
+      {
+        id:"E3",
+        title:"情境：你需要同時兼顧速度與品質",
+        desc:"若要更快交付，你可能要犧牲一些檢查；但不檢查會有風險。你會？",
+        dim:"交付策略",
+        options:[
+          {text:"先交付可用版本 + 明確列出風險與補齊時間點（分階段交付）", score:5},
+          {text:"先交出去再說，之後可以修", score:2},
+          {text:"堅持做到完美再交，延遲也沒關係", score:3},
+          {text:"看運氣，覺得應該不會出事", score:1}
+        ]
+      },
+      {
+        id:"E4",
+        title:"情境：進度落後但原因很多",
+        desc:"你發現落後，原因看起來很多。你會怎麼處理？",
+        dim:"節奏控制",
+        options:[
+          {text:"先抓最大瓶頸與可控因素，訂一個『本週必達』最小目標", score:5},
+          {text:"把所有事情都加班補回來", score:3},
+          {text:"先把問題列出來，等下週再處理", score:2},
+          {text:"覺得已經來不及，乾脆放棄", score:1}
+        ]
+      },
+      {
+        id:"E5",
+        title:"情境：你需要追蹤多個待辦",
+        desc:"你同時有很多待辦，容易漏掉。你會用什麼方法？",
+        dim:"任務管理",
+        options:[
+          {text:"用一個系統（看板/清單）管理：狀態、截止、下一步動作", score:5},
+          {text:"用腦記，重要的才記錄", score:2},
+          {text:"全部寫在備忘錄但不分類", score:3},
+          {text:"等別人提醒再做", score:1}
+        ]
+      },
+      {
+        id:"E6",
+        title:"情境：卡在等待別人回覆",
+        desc:"你的任務卡在等待他人回覆。你會？",
+        dim:"協作推進",
+        options:[
+          {text:"設定回覆期限 + 提供可選方案，降低對方決策成本", score:5},
+          {text:"每天提醒一次，看誰先回", score:3},
+          {text:"不提醒，怕打擾", score:2},
+          {text:"直接自己決定，之後再說", score:2}
+        ]
+      },
+      {
+        id:"E7",
+        title:"情境：需求變更不可避免",
+        desc:"需求變更很常發生，你要怎麼確保不失控？",
+        dim:"變更管理",
+        options:[
+          {text:"建立變更流程：影響評估→取捨決策→更新里程碑", score:5},
+          {text:"先改再說，反正總是要改", score:2},
+          {text:"一律拒絕變更", score:2},
+          {text:"看心情決定要不要改", score:1}
+        ]
+      },
+      {
+        id:"E8",
+        title:"情境：你要讓成果可複製",
+        desc:"你做得很快，但同事無法複製你的做法。你會？",
+        dim:"可複製性",
+        options:[
+          {text:"把流程寫成 1 頁 SOP：輸入→步驟→輸出→檢查點", score:5},
+          {text:"口頭講一次就好", score:3},
+          {text:"覺得每次都不一樣，沒法寫", score:2},
+          {text:"不想分享，避免被取代", score:1}
+        ]
+      }
     ]
   },
 
   "問題解決": {
-    hint: "聚焦：定位根因、提出選項、做出判斷。",
+    hint: "聚焦：定義問題、提出假設、驗證與決策。",
     questions: [
-      {id:"P1", title:"症狀 vs 根因", desc:"問題反覆出現，你會怎麼找根因？", dim:"根因分析",
-        options:[{text:"用 5 Whys / 魚骨圖把根因拆出來再對策",score:5},{text:"先頭痛醫頭",score:3},{text:"先怪使用者不會用",score:2},{text:"先放著看看會不會自己好",score:1}]},
-      {id:"P2", title:"資訊不足仍要決策", desc:"資料不完整但時間緊迫，你會怎麼做？", dim:"不確定決策",
-        options:[{text:"明確假設+風險+止損點，先做可逆決策",score:5},{text:"等資料齊再決定",score:3},{text:"靠直覺拍板",score:2},{text:"把決策丟給別人",score:1}]},
-      {id:"P3", title:"多方案選擇", desc:"方案 A/B/C 各有利弊，你會怎麼比較？", dim:"方案比較",
-        options:[{text:"用成本/影響/風險/可行性打分，推薦一個",score:5},{text:"選看起來最簡單的",score:3},{text:"選大家吵最兇的那個",score:2},{text:"每個都做一點",score:1}]},
-      {id:"P4", title:"資料驗證", desc:"有人說某數據很重要，但你不確定。你會怎麼驗？", dim:"驗證能力",
-        options:[{text:"先定義指標與樣本，做快速驗證（A/B 或抽樣）",score:5},{text:"先相信對方",score:3},{text:"覺得麻煩就略過",score:2},{text:"反正最後再看結果",score:1}]},
-      {id:"P5", title:"跨部門根因", desc:"問題牽涉多部門互相推責，你會怎麼拆？", dim:"系統思考",
-        options:[{text:"畫流程/責任邊界，找關鍵斷點與可控變因",score:5},{text:"請主管出面壓一壓",score:3},{text:"把責任推回別部門",score:2},{text:"退出不管",score:1}]},
-      {id:"P6", title:"緊急事故處理", desc:"線上故障，客訴暴增。你會怎麼做？", dim:"事故應對",
-        options:[{text:"先止血→公告→排查→根因→復盤，並分工值班",score:5},{text:"先修能修的",score:3},{text:"等別人來處理",score:2},{text:"先關掉服務再說",score:1}]},
-      {id:"P7", title:"權衡取捨", desc:"要速度還是品質？你會怎麼取捨？", dim:"取捨能力",
-        options:[{text:"對齊目標與風險，先交付可用版本再迭代",score:5},{text:"一定要完美才交付",score:3},{text:"只要快，品質不管",score:2},{text:"都要，最後爆掉",score:1}]},
-      {id:"P8", title:"重複小問題", desc:"每天都在處理小問題打斷。你會怎麼改善？", dim:"問題預防",
-        options:[{text:"分類→找最高頻根因→用 SOP/工具一次性解決",score:5},{text:"每天辛苦一點撐過去",score:3},{text:"把問題丟給新人",score:2},{text:"先放著別管",score:1}]},
+      {
+        id:"P1",
+        title:"情境：數據突然下滑但原因不明",
+        desc:"指標突然下滑，但原因不明。你會如何開始排查？",
+        dim:"問題定義",
+        options:[
+          {text:"先定義問題與影響範圍，列假設，快速驗證最可能的 2–3 個原因", score:5},
+          {text:"先找熟悉的人問問看大概是什麼原因", score:3},
+          {text:"先等看看，可能過幾天會恢復", score:1},
+          {text:"直接大改策略，反正原本也該調整", score:2}
+        ]
+      },
+      {
+        id:"P2",
+        title:"情境：大家對問題講法不同",
+        desc:"每個人都用自己的角度描述問題，討論越來越散。你會？",
+        dim:"對齊框架",
+        options:[
+          {text:"先統一定義：現象/目標/限制/衡量方式，讓大家同一張圖說話", score:5},
+          {text:"先讓大家講完，再看能不能拼出結論", score:3},
+          {text:"直接選你覺得對的說法", score:2},
+          {text:"避免介入，讓他們自己吵出結果", score:1}
+        ]
+      },
+      {
+        id:"P3",
+        title:"情境：根因看起來很多",
+        desc:"你列出很多可能原因，時間有限。你會怎麼排序？",
+        dim:"假設排序",
+        options:[
+          {text:"依影響×可能性×驗證成本排序，先測最划算的假設", score:5},
+          {text:"先測最容易的，反正先做再說", score:3},
+          {text:"先測最不可能的，排除法比較安心", score:2},
+          {text:"先把所有假設都研究一遍再決定", score:2}
+        ]
+      },
+      {
+        id:"P4",
+        title:"情境：需要做決策但資訊不完整",
+        desc:"你必須在資訊不完整下做決策。你會？",
+        dim:"決策品質",
+        options:[
+          {text:"先列風險與不可逆點，選一個可回退的方案並訂觀測指標", score:5},
+          {text:"等資訊完整再決策", score:2},
+          {text:"憑經驗直接拍板", score:3},
+          {text:"讓別人決定，避免責任", score:1}
+        ]
+      },
+      {
+        id:"P5",
+        title:"情境：測試結果不如預期",
+        desc:"你做了一個小測試，但結果沒有支持你的假設。你會？",
+        dim:"迭代學習",
+        options:[
+          {text:"修正假設或測試設計，保留學到的訊號再做下一輪", score:5},
+          {text:"覺得測試不準，忽略結果", score:2},
+          {text:"立刻換另一個方向大改", score:3},
+          {text:"停止嘗試，維持現狀", score:1}
+        ]
+      },
+      {
+        id:"P6",
+        title:"情境：問題其實是流程而不是人",
+        desc:"你懷疑問題不是某個人，而是流程設計不良。你會？",
+        dim:"系統思維",
+        options:[
+          {text:"找流程中的瓶頸與回饋回路，用小改動先降低失敗機率", score:5},
+          {text:"先換人做看看", score:3},
+          {text:"先要求大家更努力", score:2},
+          {text:"覺得沒救，只能接受", score:1}
+        ]
+      },
+      {
+        id:"P7",
+        title:"情境：跨部門各有立場",
+        desc:"你要解的問題牽涉多方利益，容易互相推責。你會？",
+        dim:"利害協調",
+        options:[
+          {text:"把討論焦點拉回共同目標與衡量指標，讓取捨透明化", score:5},
+          {text:"先私下各別溝通，再回到會議", score:3},
+          {text:"直接讓最高主管裁決", score:3},
+          {text:"不碰這種問題，太麻煩", score:1}
+        ]
+      },
+      {
+        id:"P8",
+        title:"情境：需要把問題說清楚給決策者",
+        desc:"你要向主管匯報問題與建議，主管時間很少。你會？",
+        dim:"表達結構",
+        options:[
+          {text:"用一句話結論 + 3 點證據 + 1 個建議方案（含風險）", score:5},
+          {text:"把全部細節講完，避免漏掉", score:2},
+          {text:"先講過程，最後再講結論", score:3},
+          {text:"等主管問再回答", score:2}
+        ]
+      }
     ]
   },
 
   "領導帶人": {
-    hint: "聚焦：授權、回饋、帶動團隊成長。",
+    hint: "聚焦：授權、教練、建立規則與團隊信任。",
     questions: [
-      {id:"L1", title:"授權", desc:"你會怎麼把工作交給別人又不失控？", dim:"授權管理",
-        options:[{text:"先對齊目標/邊界/驗收，給方法選擇並設檢查點",score:5},{text:"交辦後每天盯",score:3},{text:"不交辦，自己做最快",score:2},{text:"交出去就不管",score:1}]},
-      {id:"L2", title:"績效回饋", desc:"同事表現不如預期，你怎麼給回饋？", dim:"回饋能力",
-        options:[{text:"就事論事：事實→影響→期望→下一步，並給資源",score:5},{text:"先忍著等他自己改",score:3},{text:"用情緒壓迫他",score:2},{text:"直接換人",score:1}]},
-      {id:"L3", title:"培養新人", desc:"新人學很慢影響進度，你會怎麼帶？", dim:"教練帶教",
-        options:[{text:"拆小步→示範→練習→回饋→逐步放手",score:5},{text:"丟文件讓他自己看",score:3},{text:"覺得麻煩不想教",score:2},{text:"讓他先做錯再罵",score:1}]},
-      {id:"L4", title:"團隊衝突", desc:"兩位核心成員互看不順眼。你會怎麼做？", dim:"衝突調解",
-        options:[{text:"拉回共同目標，釐清界面與合作規則",score:5},{text:"讓他們自己吵出結果",score:3},{text:"偏袒你喜歡的那個",score:2},{text:"先分開不讓合作",score:1}]},
-      {id:"L5", title:"建立標準", desc:"大家各做各的風格不一致。你會怎麼做？", dim:"標準化",
-        options:[{text:"共同定義標準與範例，建立 review 機制",score:5},{text:"你自己訂規則就好",score:3},{text:"放任自由發揮",score:2},{text:"等出事再統一",score:1}]},
-      {id:"L6", title:"激勵", desc:"團隊士氣低落，你會怎麼提振？", dim:"動機管理",
-        options:[{text:"先理解原因，調整目標/資源/回饋，創造小勝利",score:5},{text:"喊口號加油",score:3},{text:"用獎懲逼績效",score:2},{text:"不管，能者多勞",score:1}]},
-      {id:"L7", title:"對齊方向", desc:"團隊覺得做的事沒有意義。你會怎麼對齊？", dim:"方向對齊",
-        options:[{text:"把目標連到客戶價值與指標，讓每人知道貢獻點",score:5},{text:"你說了算照做",score:3},{text:"先做完再說意義",score:2},{text:"覺得麻煩不談",score:1}]},
-      {id:"L8", title:"人才盤點", desc:"你怎麼評估誰適合升職或換位？", dim:"用人判斷",
-        options:[{text:"用成果+行為+潛力，多來源回饋並設試運行期",score:5},{text:"看資歷年資",score:3},{text:"看你喜不喜歡",score:2},{text:"隨便安排",score:1}]},
+      {
+        id:"L1",
+        title:"情境：新人常問重複問題",
+        desc:"新人常問重複問題，影響你工作節奏。你會？",
+        dim:"教練帶人",
+        options:[
+          {text:"建立簡單 SOP/FAQ，先讓新人自助，再約固定時間集中答疑", score:5},
+          {text:"先回覆他，之後再說", score:3},
+          {text:"叫他自己去問別人", score:2},
+          {text:"覺得新人不行，降低交辦", score:1}
+        ]
+      },
+      {
+        id:"L2",
+        title:"情境：你需要授權但又怕失控",
+        desc:"你想授權給同事，但擔心品質不穩。你會？",
+        dim:"授權管理",
+        options:[
+          {text:"定義清楚輸出標準與檢查點，讓同事在框架內自主", score:5},
+          {text:"先自己做，最快也最穩", score:2},
+          {text:"授權後完全不管，等結果", score:2},
+          {text:"只授權很小的事情，重要的自己做", score:3}
+        ]
+      },
+      {
+        id:"L3",
+        title:"情境：同事績效不穩",
+        desc:"同事有時做得很好，有時很不穩定。你會？",
+        dim:"績效輔導",
+        options:[
+          {text:"找出關鍵情境與行為差異，訂 2 週改善目標並回饋追蹤", score:5},
+          {text:"先提醒他要更認真", score:2},
+          {text:"直接換人或調整工作內容", score:3},
+          {text:"放著不管，等他自己改善", score:1}
+        ]
+      },
+      {
+        id:"L4",
+        title:"情境：會議效率很差",
+        desc:"團隊會議常發散、時間拉長、沒有結論。你會？",
+        dim:"節奏與規則",
+        options:[
+          {text:"訂議程/目標/時間盒，會後輸出決議與 owner，下一次先回顧", score:5},
+          {text:"讓大家自由討論，總會有靈感", score:2},
+          {text:"減少會議，改用訊息溝通", score:3},
+          {text:"把會議交給別人主持", score:2}
+        ]
+      },
+      {
+        id:"L5",
+        title:"情境：團隊出現衝突派系",
+        desc:"團隊出現小圈圈，互相不信任。你會先做？",
+        dim:"文化與信任",
+        options:[
+          {text:"把衝突拉回共同目標與規則，安排結對合作建立共同勝利", score:5},
+          {text:"各打五十大板，要求大家和平", score:2},
+          {text:"避免碰衝突，讓時間解決", score:1},
+          {text:"先找強勢的人談，壓住局面", score:3}
+        ]
+      },
+      {
+        id:"L6",
+        title:"情境：你需要給困難回饋",
+        desc:"同事做法有問題，你必須給回饋但怕傷和氣。你會？",
+        dim:"回饋對話",
+        options:[
+          {text:"用具體事例描述影響→提出期待→約定下一次檢核方式", score:5},
+          {text:"用暗示方式提醒一下就好", score:2},
+          {text:"私下吐槽給其他同事聽", score:1},
+          {text:"等到更嚴重再說", score:2}
+        ]
+      },
+      {
+        id:"L7",
+        title:"情境：同事缺乏主動性",
+        desc:"同事常等你交辦，缺乏主動。你會？",
+        dim:"動機與成長",
+        options:[
+          {text:"調整任務設計：讓他有決策空間 + 清楚衡量指標，並肯定成果", score:5},
+          {text:"要求他要更主動", score:2},
+          {text:"把事情收回來自己做", score:2},
+          {text:"只交辦很小的事避免出錯", score:3}
+        ]
+      },
+      {
+        id:"L8",
+        title:"情境：你要建立可持續的團隊能力",
+        desc:"團隊能交付，但品質與穩定度不一致。你要怎麼做？",
+        dim:"制度化",
+        options:[
+          {text:"建立最小制度：SOP、檢查表、回顧節奏（週/月），持續迭代", score:5},
+          {text:"靠資深同事帶新人就好", score:3},
+          {text:"靠加班把品質補回來", score:2},
+          {text:"覺得制度太麻煩，先放著", score:1}
+        ]
+      }
     ]
   }
 };
 
-// M12：先用 placeholder（同題庫映射不同主題），確保流程穩定；之後可替換成真正 M12 題庫
-const QUESTION_BANK_M12 = (()=>{
-  const clone = (o)=>JSON.parse(JSON.stringify(o));
-  const m9 = QUESTION_BANK_M9;
-  const m12 = {
-    "策略規劃": clone(m9["問題解決"]),
-    "流程治理": clone(m9["執行推進"]),
-    "商業敏感": clone(m9["溝通協作"]),
-    "人才培育": clone(m9["領導帶人"])
-  };
-  m12["策略規劃"].hint = "聚焦：目標拆解、優先順序、風險控管。";
-  m12["流程治理"].hint = "聚焦：流程落地、節點控管、跨部門協同。";
-  m12["商業敏感"].hint = "聚焦：成本/價值、決策依據、利害關係人溝通。";
-  m12["人才培育"].hint = "聚焦：授權、教練式管理、績效回饋與成長。";
-  return m12;
-})();
-
-const MODEL_BANKS = { M9: QUESTION_BANK_M9, M12: QUESTION_BANK_M12 };
-const MODEL_LABEL = { M9:"M9（職場核心）", M12:"M12（管理/成長）" };
+const PRESET_KEYS = Object.keys(QUESTION_BANK);
 
 /** ======================================================
- *  State + Storage（model + topic 分開）
+ *  State + Persistence（每個主題各自保存草稿）
  * ====================================================== */
 const STORAGE_PREFIX = "m9m12_demo_state_v2__";
-const LAST_MODEL_KEY = "m9m12_demo_last_model_v1";
-const LAST_BANK_KEY_PREFIX = "m9m12_demo_last_bank_v2__";
+const LAST_BANK_KEY = "m9m12_demo_last_bank_v2";
 
 let state = {
-  model:"M9",
-  target:"",
-  bankKey:"",
-  prefs:{ tone:"direct", focus:"action", role:"individual" },
-  qIndex:0,
-  answers:{},       // QID -> score|null
-  unsureCount:0,
-  result:null
+  target: "",
+  bankKey: "溝通協作",
+  prefs: { tone:"direct", focus:"action", role:"individual" },
+  qIndex: 0,
+  answers: {},     // QID -> score (null if unsure)
+  unsureCount: 0,
+  result: null
 };
 
+function storageKeyFor(bankKey){
+  return STORAGE_PREFIX + encodeURIComponent(bankKey || "default");
+}
+
+function loadDraft(bankKey){
+  try{
+    const raw = localStorage.getItem(storageKeyFor(bankKey));
+    if(!raw) return null;
+    const obj = JSON.parse(raw);
+    if(obj && typeof obj === "object") return obj;
+  }catch(e){}
+  return null;
+}
+
+function saveDraft(){
+  try{
+    localStorage.setItem(storageKeyFor(state.bankKey), JSON.stringify(state));
+    localStorage.setItem(LAST_BANK_KEY, state.bankKey);
+  }catch(e){}
+}
+
+function clearDraft(bankKey){
+  try{
+    localStorage.removeItem(storageKeyFor(bankKey));
+  }catch(e){}
+}
+
+function setStateFromDraft(d){
+  if(!d) return;
+  // 只接受已知欄位，避免怪資料
+  state = {
+    target: typeof d.target==="string" ? d.target : state.target,
+    bankKey: typeof d.bankKey==="string" ? d.bankKey : state.bankKey,
+    prefs: d.prefs && typeof d.prefs==="object" ? {...state.prefs, ...d.prefs} : state.prefs,
+    qIndex: Number.isFinite(d.qIndex) ? d.qIndex : 0,
+    answers: d.answers && typeof d.answers==="object" ? d.answers : {},
+    unsureCount: Number.isFinite(d.unsureCount) ? d.unsureCount : 0,
+    result: d.result && typeof d.result==="object" ? d.result : null
+  };
+}
+
+/** ======================================================
+ *  Bank / Target resolution
+ * ====================================================== */
+function normalize(s){
+  return (s||"").toString().trim().replace(/\s+/g,"");
+}
+
+function resolveBankKey(input){
+  const s = normalize(input);
+  if(!s) return state.bankKey || "溝通協作";
+
+  // exact match
+  for(const k of PRESET_KEYS){
+    if(normalize(k) === s) return k;
+  }
+  // contains match (e.g. user types "問題" -> 問題解決)
+  for(const k of PRESET_KEYS){
+    if(s.includes(normalize(k))) return k;
+  }
+  // keyword hints
+  const map = [
+    {keys:["溝通","協作","對齊","共識","跨部門"], bank:"溝通協作"},
+    {keys:["執行","推進","交付","節奏","里程碑","任務"], bank:"執行推進"},
+    {keys:["問題","分析","假設","驗證","根因","決策"], bank:"問題解決"},
+    {keys:["領導","帶人","教練","授權","團隊","管理"], bank:"領導帶人"}
+  ];
+  for(const rule of map){
+    if(rule.keys.some(kw => s.includes(normalize(kw)))) return rule.bank;
+  }
+  // fallback
+  return "溝通協作";
+}
+
+function currentBank(){
+  return QUESTION_BANK[state.bankKey] || QUESTION_BANK["溝通協作"];
+}
+
+function currentQuestions(){
+  return currentBank().questions;
+}
+
+function currentDimsOrder(){
+  // 依題目出現順序去重；你也可以改成固定排序
+  const seen = new Set();
+  const dims = [];
+  for(const q of currentQuestions()){
+    if(!seen.has(q.dim)){
+      seen.add(q.dim);
+      dims.push(q.dim);
+    }
+  }
+  return dims;
+}
+
+/** ======================================================
+ *  View / UI helpers
+ * ====================================================== */
 const $ = (sel)=>document.querySelector(sel);
 const $$ = (sel)=>Array.from(document.querySelectorAll(sel));
 
-function bankFor(model){ return MODEL_BANKS[model] || QUESTION_BANK_M9; }
-function defaultBankFor(model){
-  const keys = Object.keys(bankFor(model));
-  return keys[0] || "溝通協作";
+function show(viewId){
+  $$(".view").forEach(v=>v.classList.remove("active"));
+  $("#"+viewId).classList.add("active");
 }
-function getBank(){ return bankFor(state.model); }
-function presetKeys(){ return Object.keys(getBank()); }
-function storageKeyFor(model, bankKey){
-  return STORAGE_PREFIX + encodeURIComponent(model||"M9") + "__" + encodeURIComponent(bankKey||"default");
-}
-function lastBankKeyFor(model){
-  return LAST_BANK_KEY_PREFIX + (model||"M9");
-}
-function updateBuildLabel(){
-  const el = $("#buildLabel");
-  if(!el) return;
-  el.textContent = `${BUILD_LABEL_BASE} · ${state.model}`;
-}
+
 function setClock(){
   const d = new Date();
   const hh = String(d.getHours()).padStart(2,"0");
@@ -660,52 +1295,293 @@ function setClock(){
   $("#clock").textContent = `${hh}:${mm}`;
 }
 
-function loadDraft(model, bankKey){
-  try{
-    const raw = localStorage.getItem(storageKeyFor(model, bankKey));
-    if(!raw) return null;
-    const obj = JSON.parse(raw);
-    if(obj && typeof obj==="object") return obj;
-  }catch(e){}
-  return null;
+function starsHTML(n, max=5){
+  let html="";
+  for(let i=1;i<=max;i++){
+    html += `
+      <svg class="star ${i<=n?'on':''}" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 2l2.9 6.3 6.9.6-5.2 4.5 1.6 6.7L12 16.9 5.8 20.1l1.6-6.7L2.2 8.9l6.9-.6L12 2z"/>
+      </svg>`;
+  }
+  return html;
 }
 
-function saveDraft(){
-  try{
-    localStorage.setItem(storageKeyFor(state.model, state.bankKey), JSON.stringify(state));
-    localStorage.setItem(LAST_MODEL_KEY, state.model);
-    localStorage.setItem(lastBankKeyFor(state.model), state.bankKey);
-  }catch(e){}
+/** ======================================================
+ *  Scoring (Hard-code)
+ * ====================================================== */
+function mapToStars(avgScore){
+  if(avgScore >= 4.6) return 5;
+  if(avgScore >= 3.8) return 4;
+  if(avgScore >= 3.0) return 3;
+  if(avgScore >= 2.2) return 2;
+  return 1;
 }
 
-function clearDraft(model, bankKey){
-  try{ localStorage.removeItem(storageKeyFor(model, bankKey)); }catch(e){}
-}
+function computeResult(){
+  const qs = currentQuestions();
+  const dimsOrder = currentDimsOrder();
 
-function show(viewId){
-  $$(".view").forEach(v=>v.classList.remove("active"));
-  const el = document.getElementById(viewId);
-  if(el) el.classList.add("active");
-  updateBuildLabel();
-  setClock();
-}
+  const dimScores = {};
+  const dimCounts = {};
+  let total = 0, count = 0;
 
-function setStateFromDraft(d){
-  if(!d) return;
+  qs.forEach(q=>{
+    const v = state.answers[q.id];
+    if(v == null) return;
+    total += v; count += 1;
+    dimScores[q.dim] = (dimScores[q.dim] || 0) + v;
+    dimCounts[q.dim] = (dimCounts[q.dim] || 0) + 1;
+  });
 
-  const nextModel = (d.model && MODEL_BANKS[d.model]) ? d.model : state.model;
-  const b = bankFor(nextModel);
+  const answered = count;
+  const confidence = Math.max(0.35, Math.min(0.95, answered / qs.length));
 
-  state = {
-    model: nextModel,
-    target: typeof d.target==="string" ? d.target : "",
-    bankKey: (typeof d.bankKey==="string" && b[d.bankKey]) ? d.bankKey : defaultBankFor(nextModel),
-    prefs: d.prefs && typeof d.prefs==="object" ? {...state.prefs, ...d.prefs} : state.prefs,
-    qIndex: Number.isFinite(d.qIndex) ? d.qIndex : 0,
-    answers: d.answers && typeof d.answers==="object" ? d.answers : {},
-    unsureCount: Number.isFinite(d.unsureCount) ? d.unsureCount : 0,
-    result: d.result && typeof d.result==="object" ? d.result : null
+  const dimStars = {};
+  dimsOrder.forEach(d=>{
+    if(dimCounts[d]){
+      const avg = dimScores[d] / dimCounts[d];
+      dimStars[d] = mapToStars(avg);
+    }else{
+      // 未作答/未覆蓋（本題庫通常不會）
+      dimStars[d] = 3;
+    }
+  });
+
+  const overallAvg = answered ? total / answered : 3.0;
+  const overallStars = mapToStars(overallAvg);
+
+  const label = makeLabel(overallStars);
+  const insights = makeInsights(dimStars, overallStars);
+  const actionNow = makeActionNow(dimStars, state.prefs.focus);
+
+  return {
+    overallStars,
+    overallAvg,
+    label,
+    dimStars,
+    dimsOrder,
+    confidence,
+    answered,
+    totalQ: qs.length,
+    insights,
+    actionNow
   };
+}
+
+function makeLabel(overallStars){
+  if(overallStars >= 5) return "強勢穩定｜可做團隊標竿";
+  if(overallStars === 4) return "表現良好｜進一步補短板";
+  if(overallStars === 3) return "中等可用｜需建立一致方法";
+  if(overallStars === 2) return "風險偏高｜先修正關鍵習慣";
+  return "需優先改善｜建議顧問介入";
+}
+
+function makeInsights(dimStars, overallStars){
+  const arr = Object.entries(dimStars).map(([k,v])=>({k,v}));
+  arr.sort((a,b)=>b.v-a.v);
+  const top = arr[0], low = arr[arr.length-1];
+
+  const tone = state.prefs.tone;
+
+  const t1 = tone==="direct"
+    ? `優勢在「${top.k}」：你通常能用更有效的方法推進。`
+    : `你的亮點是「${top.k}」：這會是你持續累積信任的基礎。`;
+
+  const t2 = tone==="direct"
+    ? `短板在「${low.k}」：這是造成卡關/重工的主要風險點。`
+    : `可以先從「${low.k}」著手：把風險降下來，你會更省力。`;
+
+  const t3 = (overallStars>=4)
+    ? `若你要升級到「可複製」的表現：把做法寫成小 SOP（1頁就夠）。`
+    : `先把「一件事做到可預期」：用固定流程處理 1–2 個高頻問題。`;
+
+  return [
+    `洞察 1（優勢）｜${t1}`,
+    `洞察 2（風險）｜${t2}`,
+    `洞察 3（升級）｜${t3}`
+  ];
+}
+
+function makeActionNow(dimStars, focus){
+  let lowDim = null, lowVal = 99;
+  for(const [k,v] of Object.entries(dimStars)){
+    if(v < lowVal){ lowVal = v; lowDim = k; }
+  }
+
+  const actionMap = {
+    // 溝通協作
+    "溝通清晰": "下次交辦前先寫 1 行「目的/輸出/截止時間」，並附一個範例。",
+    "協作推進": "把需求拆成最小可交付版本（MVP），約定『誰/做什麼/何時交付』。",
+    "共識對齊": "會後 3 分鐘整理決議：owner/輸出/截止，請各方回覆確認。",
+    "提問澄清": "把模糊回饋改成選擇題：提供 2–3 個方案讓對方選。",
+    "影響力": "用對方關注的指標（成本/風險/時程）重新描述你的訴求。",
+    "衝突處理": "把爭點改寫成『共同目標 + 可驗證問題』，避免情緒攻防。",
+    "回饋吸收": "收到回饋先問：可否給一個例子？下次希望我怎麼做？",
+    "協作規則": "訂變更流程：截止點、影響評估、誰決策，讓改動有節奏。",
+
+    // 執行推進
+    "優先順序": "列出手上 3 件事的價值與截止時間，請對方做取捨（你不背鍋）。",
+    "拆解規劃": "把任務拆成里程碑與 MVP，先交付可用版本再迭代。",
+    "交付策略": "先交付可用版本，明確列出風險與補齊時間點。",
+    "節奏控制": "抓最大瓶頸，訂『本週必達』最小目標並每天追 1 次。",
+    "任務管理": "用一個系統管理待辦：狀態/截止/下一步動作（不要用腦記）。",
+    "變更管理": "每次變更都做影響評估→取捨決策→更新里程碑。",
+    "可複製性": "把你的做法寫成 1 頁 SOP：輸入→步驟→輸出→檢查點。",
+
+    // 問題解決
+    "問題定義": "先把問題寫成一句話：現象/影響/範圍/要改善到哪裡。",
+    "對齊框架": "用同一套框架描述：現象→目標→限制→衡量，避免各說各話。",
+    "假設排序": "依影響×可能性×驗證成本排序，先測最划算的假設。",
+    "決策品質": "選可回退方案，訂觀測指標與停損點。",
+    "迭代學習": "保留測試訊號，修正假設或測試設計再跑下一輪。",
+    "系統思維": "找流程瓶頸與回饋回路，用小改動先降失敗率。",
+    "利害協調": "把取捨透明化：共同目標 + 指標 + 方案比較。",
+    "表達結構": "用 1 句結論 + 3 點證據 + 1 個建議方案（含風險）。",
+
+    // 領導帶人
+    "教練帶人": "建立 1 頁 FAQ：新人先自助，固定時間集中答疑。",
+    "授權管理": "定輸出標準 + 檢查點，讓同事在框架內自主。",
+    "績效輔導": "訂 2 週改善目標與回饋節奏，用例子說影響。",
+    "節奏與規則": "會議時間盒 + 會後決議輸出（owner/截止/檢核）。",
+    "文化與信任": "拉回共同目標與規則，安排結對合作建立共同勝利。",
+    "回饋對話": "用具體例子→影響→期待→下一次檢核方式。",
+    "動機與成長": "給決策空間 + 清楚指標，並肯定成果形成正回饋。",
+    "制度化": "建立最小制度：SOP、檢查表、回顧節奏（週/月）。"
+  };
+
+  if(focus==="strategy"){
+    return "把你最常遇到的卡點寫成『情境→目標→做法→衡量』四格，當作你的小方法論。";
+  }
+  return actionMap[lowDim] || "選一個你最常卡關的情境，寫下『下一次我會怎麼做』。";
+}
+
+/** ======================================================
+ *  Render functions
+ * ====================================================== */
+function renderPresetChips(){
+  const box = $("#presetChips");
+  box.innerHTML = "";
+  PRESET_KEYS.forEach(k=>{
+    const el = document.createElement("div");
+    el.className = "chip";
+    el.textContent = k;
+    el.onclick = ()=>{
+      $("#targetInput").value = k;
+      // 只標示 UI，不立刻切題庫（由下一步決定）
+      $$("#presetChips .chip").forEach(x=>x.classList.remove("active"));
+      el.classList.add("active");
+    };
+    box.appendChild(el);
+  });
+}
+
+function renderOverview(){
+  const b = currentBank();
+  const qs = currentQuestions();
+
+  $("#summaryTarget").textContent = state.bankKey;
+  $("#summaryHint").textContent = b.hint || "";
+
+  $("#summaryQCount").textContent = `${qs.length} 題`;
+
+  const t = state.prefs.tone==="direct" ? "直接" : "溫和";
+  const f = state.prefs.focus==="action" ? "行動" : "策略";
+  const r = state.prefs.role==="individual" ? "個人" : (state.prefs.role==="manager" ? "主管" : "HR/顧問");
+  $("#summaryPrefs").textContent = `${r}｜${t}｜偏${f}`;
+  $("#overviewTitle").textContent = `「${state.bankKey}」盤點概覽`;
+}
+
+function renderQuestion(){
+  const qs = currentQuestions();
+  const q = qs[state.qIndex];
+
+  $("#qStep").textContent = `第 ${state.qIndex+1} / ${qs.length} 題`;
+  $("#qTitle").textContent = q.title;
+  $("#qDesc").textContent = q.desc;
+
+  const pct = (state.qIndex / qs.length) * 100;
+  $("#qBar").style.width = `${Math.min(100, pct)}%`;
+
+  const opts = $("#options");
+  opts.innerHTML = "";
+  q.options.forEach((o, idx)=>{
+    const btn = document.createElement("button");
+    btn.className = "option";
+    btn.type = "button";
+    btn.textContent = `${String.fromCharCode(65+idx)}. ${o.text}`;
+    if(state.answers[q.id] === o.score) btn.classList.add("selected");
+    btn.onclick = ()=>{
+      state.answers[q.id] = o.score;
+      saveDraft();
+      btn.classList.add("selected");
+      setTimeout(()=>nextQuestion(), 260);
+    };
+    opts.appendChild(btn);
+  });
+}
+
+function renderConfirm(){
+  const qs = currentQuestions();
+  const answered = Object.values(state.answers).filter(v=>v!=null).length;
+  $("#answeredCount").textContent = `${answered} / ${qs.length}`;
+  $("#confirmTarget").textContent = state.bankKey || "—";
+}
+
+function renderResult(){
+  const r = state.result;
+
+  $("#overallNum").textContent = r.overallStars;
+  $("#overallLabel").textContent = r.label;
+  $("#overallStars").innerHTML = starsHTML(r.overallStars);
+
+  $("#confidenceLine").textContent = `可信度：${Math.round(r.confidence*100)}%（已回答 ${r.answered}/${r.totalQ}）`;
+
+  const dimList = $("#dimList");
+  dimList.innerHTML = "";
+  r.dimsOrder.forEach(d=>{
+    const s = r.dimStars[d];
+    const row = document.createElement("div");
+    row.className = "dimRow";
+    row.innerHTML = `
+      <div class="dimName">${d}</div>
+      <div class="dimStars">${starsHTML(s,5)}</div>
+    `;
+    dimList.appendChild(row);
+  });
+
+  const ins = $("#insights");
+  ins.innerHTML = "";
+  r.insights.forEach(text=>{
+    const c = document.createElement("div");
+    c.className = "card";
+    c.style.padding = "12px";
+    c.style.borderRadius = "16px";
+    c.style.background = "linear-gradient(180deg, #FFFFFF, #F7FAFF)";
+    c.innerHTML = `<div class="small">${text}</div>`;
+    ins.appendChild(c);
+  });
+
+  $("#actionNow").textContent = r.actionNow;
+
+  // full report placeholder content
+  $("#fullTitle").textContent = `「${state.bankKey}」完整版報告`;
+  const t = state.prefs.tone==="direct" ? "直接" : "溫和";
+  const f = state.prefs.focus==="action" ? "行動" : "策略";
+  $("#fullMeta").textContent = `模式：${t}｜偏${f}｜可信度：${Math.round(r.confidence*100)}%（已回答 ${r.answered}/${r.totalQ}）`;
+
+  $("#fullA").textContent = "你在各向度的星等分布如摘要頁所示。建議先修正最低分向度，再把高分向度做成可複製流程（SOP）。";
+  $("#fullB").textContent = "高頻風險通常出現在：需求不清、優先順序被插單破壞、跨部門回覆慢、衝突升溫造成重工。";
+  $("#fullC").innerHTML = [
+    "1) 把高頻情境寫成固定流程（1頁就夠）。",
+    "2) 每週做一次小回顧：本週最有效的一件事、最需要修正的一件事。",
+    "3) 對最低分向度做刻意練習：一次只改一個行為。"
+  ].join("<br/>");
+  $("#fullD").innerHTML =
+    "第 1 週：建立 1 個最常用模板（交辦/回報/決議）。<br/>" +
+    "第 2 週：挑 1 個真實案例，依模板執行並記錄結果。<br/>" +
+    "第 3 週：針對最低分向度做 2 次刻意練習。<br/>" +
+    "第 4 週：總結成『一頁方法論』，形成可複製做法。";
+  $("#fullE").textContent = "此 Demo 星等為示意：以題目分數平均映射星等；可信度依已回答比例估算。正式版可接題庫/權重/星等框架。";
 }
 
 function setPrefActive(){
@@ -716,430 +1592,136 @@ function setPrefActive(){
   });
 }
 
-function setModelActive(){
-  $$(".chip.model").forEach(el=>{
-    el.classList.toggle("active", el.dataset.model === state.model);
-  });
+/** ======================================================
+ *  Flow control
+ * ====================================================== */
+function nextQuestion(){
+  const qs = currentQuestions();
+  if(state.qIndex < qs.length - 1){
+    state.qIndex += 1;
+    saveDraft();
+    renderQuestion();
+  }else{
+    renderConfirm();
+    show("v-s5");
+  }
+}
+
+function prevQuestion(){
+  if(state.qIndex > 0){
+    state.qIndex -= 1;
+    saveDraft();
+    renderQuestion();
+    show("v-s4");
+  }else{
+    show("v-s3");
+  }
+}
+
+let loadingTimer1=null, loadingTimer2=null;
+
+function startLoading(){
+  show("v-s6");
+  $("#lsBar1").style.width = "0%";
+  $("#lsBar2").style.width = "0%";
+
+  let p1=0, p2=0;
+  loadingTimer1 = setInterval(()=>{
+    p1 += 8;
+    $("#lsBar1").style.width = `${Math.min(p1, 100)}%`;
+    if(p1>=100){
+      clearInterval(loadingTimer1);
+      loadingTimer2 = setInterval(()=>{
+        p2 += 10;
+        $("#lsBar2").style.width = `${Math.min(p2, 100)}%`;
+        if(p2>=100){
+          clearInterval(loadingTimer2);
+          state.result = computeResult();
+          saveDraft();
+          renderResult();
+          show("v-s7");
+        }
+      }, 180);
+    }
+  }, 160);
+}
+
+function stopLoading(){
+  if(loadingTimer1) clearInterval(loadingTimer1);
+  if(loadingTimer2) clearInterval(loadingTimer2);
+  loadingTimer1 = loadingTimer2 = null;
 }
 
 /** ======================================================
- *  Bank switch / Home
+ *  Bank switching logic（重點）
+ *  - 依輸入/主題chips resolve bankKey
+ *  - 切換 bankKey 時：載入該主題的草稿；沒有就初始化
  * ====================================================== */
-function renderPresetChips(){
-  const box = $("#presetChips");
-  box.innerHTML = "";
-  presetKeys().forEach(k=>{
-    const el = document.createElement("div");
-    el.className = "chip";
-    el.textContent = k;
-    el.onclick = ()=>{
-      $("#targetInput").value = k;
-      $$("#presetChips .chip").forEach(x=>x.classList.remove("active"));
-      el.classList.add("active");
-    };
-    box.appendChild(el);
-  });
-}
-
-function resolveBankKey(input){
-  const s = (input||"").toString().trim().replace(/\s+/g,"");
-  if(!s) return defaultBankFor(state.model);
-
-  // exact / contains
-  for(const k of presetKeys()){
-    const kk = k.replace(/\s+/g,"");
-    if(kk === s) return k;
-  }
-  for(const k of presetKeys()){
-    const kk = k.replace(/\s+/g,"");
-    if(s.includes(kk) || kk.includes(s)) return k;
-  }
-  // fallback
-  return defaultBankFor(state.model);
-}
-
 function switchBankByInput(inputText){
   const resolved = resolveBankKey(inputText);
-  if(!getBank()[resolved]) return;
+  if(!QUESTION_BANK[resolved]) return;
 
-  // same topic: just update target text
+  // 如果本來就同一個主題，只更新 target 文本
   if(state.bankKey === resolved){
     state.target = inputText || resolved;
     saveDraft();
     return;
   }
 
-  // save current
-  if(state.bankKey) saveDraft();
+  // 先儲存目前主題草稿
+  saveDraft();
 
-  // load or reset for new topic
-  const draft = loadDraft(state.model, resolved);
+  // 切到新主題：優先讀草稿
+  const draft = loadDraft(resolved);
   if(draft){
     setStateFromDraft(draft);
   }else{
-    state.target = resolved;
-    state.bankKey = resolved;
-    state.qIndex = 0;
-    state.answers = {};
-    state.unsureCount = 0;
-    state.result = null;
-  }
-  saveDraft();
-}
-
-function currentBank(){
-  const b = getBank();
-  return b[state.bankKey] || b[defaultBankFor(state.model)] || Object.values(b)[0];
-}
-
-function currentQuestions(){
-  return (currentBank().questions || []).slice(0,8);
-}
-
-/** ======================================================
- *  Overview / Quiz / Result
- * ====================================================== */
-function answeredCount(){
-  const qs = currentQuestions();
-  let n=0;
-  qs.forEach(q=>{
-    if(Object.prototype.hasOwnProperty.call(state.answers, q.id)) n++;
-  });
-  return n;
-}
-
-function renderOverview(){
-  const b = currentBank();
-  const title = state.bankKey || defaultBankFor(state.model);
-
-  $("#ovTitle").textContent = `主題：${title}`;
-  $("#ovHint").textContent = b.hint || "—";
-
-  const a = answeredCount();
-  $("#ovProgress").textContent = `${a}/8`;
-  $("#ovBar").style.width = `${Math.round((a/8)*100)}%`;
-
-  $("#ovModel").textContent = `模型：${MODEL_LABEL[state.model] || state.model}`;
-  $("#ovTone").textContent = `風格：${toneLabel(state.prefs.tone)} / ${focusLabel(state.prefs.focus)} / ${roleLabel(state.prefs.role)}`;
-  updateBuildLabel();
-}
-
-function renderQuestion(){
-  const qs = currentQuestions();
-  const idx = Math.max(0, Math.min(state.qIndex, qs.length-1));
-  state.qIndex = idx;
-
-  const q = qs[idx];
-  $("#qStep").textContent = `${idx+1}/8`;
-  $("#qDim").textContent = q.dim || "—";
-  $("#qId").textContent = q.id || `Q${idx+1}`;
-  $("#qTitle").textContent = q.title || "—";
-  $("#qDesc").textContent = q.desc || "—";
-
-  const box = $("#optBox");
-  box.innerHTML = "";
-
-  const selected = state.answers[q.id];
-
-  (q.options||[]).forEach(opt=>{
-    const el = document.createElement("div");
-    el.className = "opt";
-    el.textContent = opt.text;
-    el.onclick = ()=>{
-      state.answers[q.id] = opt.score;
-      saveDraft();
-      renderQuestion();
+    // 新主題乾淨初始化
+    state = {
+      target: inputText || resolved,
+      bankKey: resolved,
+      prefs: {...state.prefs}, // 保留偏好
+      qIndex: 0,
+      answers: {},
+      unsureCount: 0,
+      result: null
     };
-    if(selected === opt.score) el.classList.add("selected");
-    box.appendChild(el);
-  });
-
-  // unsure
-  const unsure = document.createElement("div");
-  unsure.className = "opt";
-  unsure.textContent = "不確定（先跳過，之後再回來）";
-  unsure.onclick = ()=>{
-    if(!Object.prototype.hasOwnProperty.call(state.answers, q.id)) state.unsureCount += 1;
-    state.answers[q.id] = null;
-    saveDraft();
-    renderQuestion();
-  };
-  if(selected === null) unsure.classList.add("selected");
-  box.appendChild(unsure);
-
-  $("#btnPrev").disabled = (idx===0);
-  $("#btnPrev").style.opacity = (idx===0) ? .55 : 1;
-}
-
-function computeResult(){
-  const qs = currentQuestions();
-
-  // 強制完成：不允許 0/8 或 未滿 8 題直接生成
-  const a = answeredCount();
-  if(a < 8){
-    alert(`你尚未完成答題：目前 ${a}/8。\n請完成 8 題後再生成結果。`);
-    show("v-s4");
-    renderQuestion();
-    return null;
   }
 
-  // average & dim averages
-  const dimMap = {};
-  let sum=0, cnt=0;
-  qs.forEach(q=>{
-    const v = state.answers[q.id];
-    // v can be null, but since a==8, null is still counted as answered; treat null as 3 (中立) but會降低可信度
-    const score = (v===null) ? 3 : v;
-    sum += score; cnt += 1;
+  // 確保 bankKey 正確
+  state.bankKey = resolved;
+  if(!state.target) state.target = resolved;
 
-    const d = q.dim || "綜合";
-    if(!dimMap[d]) dimMap[d] = {sum:0, cnt:0};
-    dimMap[d].sum += score;
-    dimMap[d].cnt += 1;
-  });
-
-  const avg = sum / Math.max(1,cnt);
-  const stars = clamp(Math.round(avg), 1, 5);
-
-  const dims = Object.keys(dimMap).map(k=>{
-    const a = dimMap[k].sum / Math.max(1, dimMap[k].cnt);
-    return { dim:k, avg:a, stars: clamp(Math.round(a),1,5) };
-  }).sort((a,b)=>b.stars-a.stars);
-
-  const confidence = confidenceLabel(state.unsureCount);
-
-  const r = {
-    stars,
-    avg,
-    dims,
-    confidence,
-    meta:{
-      model: state.model,
-      topic: state.bankKey,
-      unsureCount: state.unsureCount,
-      prefs:{...state.prefs}
-    }
-  };
-  state.result = r;
+  // 更新 last bank
   saveDraft();
-  return r;
-}
-
-function renderResult(){
-  const r = state.result;
-  if(!r) return;
-
-  $("#rsTitle").textContent = `你的星等：${r.stars}★`;
-  $("#rsSub").textContent = `${MODEL_LABEL[r.meta.model] || r.meta.model} · 主題「${r.meta.topic}」 · 信心度：${r.confidence}`;
-
-  const dimsBox = $("#rsDims");
-  dimsBox.innerHTML = "";
-  r.dims.forEach(d=>{
-    const row = document.createElement("div");
-    row.className = "row";
-    row.style.padding = "8px 0";
-    row.style.borderBottom = "1px dashed rgba(230,234,242,.9)";
-    row.innerHTML = `
-      <div>
-        <div class="kpi">${escapeHtml(d.dim)}</div>
-        <div class="small">平均：${d.avg.toFixed(1)} / 5</div>
-      </div>
-      <div class="stars">${renderStars(d.stars)}</div>
-    `;
-    dimsBox.appendChild(row);
-  });
-  const meta = `Build：${BUILD_LABEL_BASE} · 不確定次數：${r.meta.unsureCount}`;
-  $("#rsMeta").textContent = meta;
-}
-
-function renderReport(){
-  const r = state.result;
-  if(!r) return;
-
-  $("#rpSub").textContent = `${MODEL_LABEL[r.meta.model] || r.meta.model} · 主題「${r.meta.topic}」 · 星等 ${r.stars}★ · 信心度：${r.confidence}`;
-
-  const tone = state.prefs.tone;
-  const focus = state.prefs.focus;
-  const role = state.prefs.role;
-
-  const topDims = r.dims.slice(0,2).map(x=>x.dim);
-  const lowDims = r.dims.slice(-2).map(x=>x.dim);
-
-  const blocks = [];
-  blocks.push(cardBlock("整體判讀", reportOverall(r, tone)));
-  blocks.push(cardBlock("你的優勢（Top 2）", `目前表現較強的面向為：<b>${escapeHtml(topDims.join("、"))}</b>。建議把它們當作推進工作的主引擎。`));
-  blocks.push(cardBlock("可優先補強（Bottom 2）", `較需要刻意練習的面向為：<b>${escapeHtml(lowDims.join("、"))}</b>。先做小幅度的可執行改動，避免一次改太大。`));
-  blocks.push(cardBlock("下一步行動（3 條）", reportActions(r, focus, role)));
-  blocks.push(cardBlock("提醒", reportNotes(r)));
-
-  $("#rpBody").innerHTML = blocks.join("");
 }
 
 /** ======================================================
- *  Text helpers
+ *  Event bindings
  * ====================================================== */
-function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
-function escapeHtml(s){
-  return (s||"").toString()
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
-function renderStars(n){
-  let out="";
-  for(let i=1;i<=5;i++){
-    out += `<span class="star ${i<=n ? "on":""}">★</span>`;
-  }
-  return out;
-}
-function confidenceLabel(unsureCount){
-  if(unsureCount<=1) return "高";
-  if(unsureCount<=3) return "中";
-  return "低";
-}
-function toneLabel(v){
-  return ({direct:"直接清楚", warm:"溫和鼓勵", formal:"商務正式"}[v] || "預設");
-}
-function focusLabel(v){
-  return ({action:"可執行建議", strategy:"策略脈絡", coach:"教練引導"}[v] || "預設");
-}
-function roleLabel(v){
-  return ({individual:"個人貢獻者", lead:"帶人主管", owner:"負責人/老闆"}[v] || "預設");
-}
-function cardBlock(title, html){
-  return `
-    <div style="padding:10px 0;border-bottom:1px dashed rgba(230,234,242,.9)">
-      <div class="kpi">${escapeHtml(title)}</div>
-      <div class="spacer" style="height:8px"></div>
-      <div class="small" style="font-size:13.5px;color:#1F2937;line-height:1.55">${html}</div>
-    </div>
-  `;
-}
-function reportOverall(r, tone){
-  const base = `整體平均約 <b>${r.avg.toFixed(1)}</b>/5，屬於 <b>${r.stars}★</b> 水準。`;
-  if(tone==="warm") return base + ` 你已經具備不錯的底盤，接下來只要把兩個關鍵面向再拉起來，效果會很明顯。`;
-  if(tone==="formal") return base + ` 建議以「可驗收的行為變更」為導向，逐步提高穩定度與可預期性。`;
-  return base + ` 建議把強項用在「帶動進度」，弱項用小步迭代補起來。`;
-}
-function reportActions(r, focus, role){
-  const t = r.meta.topic;
-  const a1 = `設定 1 個「可驗收」的行為：例如每次交付都附上 <b>驗收標準</b>（誰、何時、什麼算完成）。`;
-  const a2 = `把本主題拆成 2 週節奏：每週固定做 1 次 <b>回顧/復盤</b>，只改 1 件事。`;
-  const a3 = (role==="lead" || role==="owner")
-    ? `把改動做成團隊規則：用 <b>模板/清單</b> 固化，降低靠個人撐住的成本。`
-    : `先從你能控制的界面改：用 <b>清單/範例</b> 提升你的交付一致性。`;
-
-  if(focus==="strategy") return `1) ${a1}<br/>2) 把改動連到目標：這件事會改善哪個指標？<br/>3) ${a3}`;
-  if(focus==="coach") return `1) ${a1}<br/>2) 每次遇到卡點先問自己：<b>我要的是什麼結果？</b><br/>3) ${a3}`;
-  return `1) ${a1}<br/>2) ${a2}<br/>3) ${a3}`;
-}
-function reportNotes(r){
-  if(r.meta.unsureCount>=4){
-    return `你選了較多「不確定」，代表目前評估可信度較低。建議下次答題時用「最近 2 週」作為回憶範圍，會更準。`;
-  }
-  return `提醒：這是 demo 版本（硬編題庫），主要用來驗證 UI/UX 與商業化互動體驗。`;
-}
-
-/** ======================================================
- *  Bind / Flow
- * ====================================================== */
-function initFromStorage(){
-  // model
-  const lastModel = localStorage.getItem(LAST_MODEL_KEY);
-  state.model = (lastModel && MODEL_BANKS[lastModel]) ? lastModel : "M9";
-
-  // bank for model
-  const lastBank = localStorage.getItem(lastBankKeyFor(state.model));
-  const initBank = (lastBank && bankFor(state.model)[lastBank]) ? lastBank : defaultBankFor(state.model);
-
-  // draft
-  const draft = loadDraft(state.model, initBank);
-  if(draft) setStateFromDraft(draft);
-  else{
-    state.bankKey = initBank;
-    state.target = initBank;
-    state.qIndex = 0;
-    state.answers = {};
-    state.unsureCount = 0;
-    state.result = null;
-    saveDraft();
-  }
-}
-
 function bind(){
-  // back buttons
-  $$(".back[data-back]").forEach(el=>{
-    el.onclick = ()=> show(el.dataset.back);
+  // generic back
+  $$(".back[data-back]").forEach(b=>{
+    b.onclick = ()=> show(b.dataset.back);
   });
+
+  $("#btnToOverview").onclick = ()=>{
+    const v = $("#targetInput").value.trim();
+    // 切換題庫（重點）
+    switchBankByInput(v);
+    renderOverview();
+    show("v-s3");
+  };
 
   $("#advRow").onclick = ()=>{
+    // 先把輸入同步到 state.target（但不切換也可）
     const v = $("#targetInput").value.trim();
     if(v) state.target = v;
     setPrefActive();
-    setModelActive();
     show("v-s2");
   };
 
-  $("#btnToOverview1").onclick = ()=>{
-    const v = $("#targetInput").value.trim();
-    if(v) switchBankByInput(v);
-    renderOverview();
-    show("v-s3");
-  };
-
-  $("#btnToOverview2").onclick = ()=>{
-    const v = $("#targetInput").value.trim();
-    if(v) switchBankByInput(v);
-    renderOverview();
-    show("v-s3");
-  };
-
-  // model chips
-  $$(".chip.model").forEach(ch=>{
-    ch.onclick = ()=>{
-      // save current (old model/topic)
-      if(state.bankKey) saveDraft();
-
-      const next = ch.dataset.model;
-      if(!MODEL_BANKS[next] || next===state.model){
-        setModelActive();
-        return;
-      }
-
-      // switch model
-      state.model = next;
-
-      // choose last bank in that model, then load draft or reset
-      const lastBank = localStorage.getItem(lastBankKeyFor(state.model));
-      const initBank = (lastBank && bankFor(state.model)[lastBank]) ? lastBank : defaultBankFor(state.model);
-
-      const draft = loadDraft(state.model, initBank);
-      if(draft) setStateFromDraft(draft);
-      else{
-        state.bankKey = initBank;
-        state.target = initBank;
-        state.qIndex = 0;
-        state.answers = {};
-        state.unsureCount = 0;
-        state.result = null;
-        saveDraft();
-      }
-
-      // update home chips & placeholder
-      renderPresetChips();
-      $("#targetInput").placeholder = (state.model==="M9")
-        ? "例如：溝通協作 / 執行推進 / 問題解決 / 領導帶人"
-        : "例如：策略規劃 / 流程治理 / 商業敏感 / 人才培育";
-
-      setModelActive();
-      renderOverview();
-      updateBuildLabel();
-    };
-  });
-
-  // prefs
+  // S2 preference chips
   $$(".chip.pref").forEach(ch=>{
     ch.onclick = ()=>{
       const k = ch.dataset.key;
@@ -1147,124 +1729,167 @@ function bind(){
       state.prefs[k] = v;
       saveDraft();
       setPrefActive();
-      renderOverview();
     };
   });
 
-  $("#btnStartQuiz").onclick = ()=>{
-    // go quiz
+  $("#btnToOverview2").onclick = ()=>{
     const v = $("#targetInput").value.trim();
-    if(v) switchBankByInput(v);
-    state.result = null;
+    switchBankByInput(v);
+    renderOverview();
+    show("v-s3");
+  };
+
+  $("#btnToPrefs").onclick = ()=>{
+    setPrefActive();
+    show("v-s2");
+  };
+
+  $("#btnStart").onclick = ()=>{
+    // 如果沒答過，從 0 開始；如果有草稿，延續草稿
+    if(state.qIndex >= currentQuestions().length) state.qIndex = 0;
     saveDraft();
     renderQuestion();
     show("v-s4");
   };
 
-  $("#btnBackToOv").onclick = ()=>{
-    renderOverview();
-    show("v-s3");
-  };
+  $("#btnBackQ").onclick = ()=> prevQuestion();
 
-  $("#btnPrev").onclick = ()=>{
-    state.qIndex = Math.max(0, state.qIndex-1);
+  $("#btnUnsure").onclick = ()=>{
+    const q = currentQuestions()[state.qIndex];
+    state.answers[q.id] = null;
+    state.unsureCount += 1;
     saveDraft();
-    renderQuestion();
+    setTimeout(()=>nextQuestion(), 200);
   };
 
-  $("#btnNext").onclick = ()=>{
-    // require answered current before next (null is allowed as "answered")
-    const qs = currentQuestions();
-    const q = qs[state.qIndex];
-    if(!Object.prototype.hasOwnProperty.call(state.answers, q.id)){
-      alert("請先選擇一個選項（或選『不確定』）再往下。");
-      return;
-    }
+  $("#btnGenerate").onclick = ()=>{
+    stopLoading();
+    startLoading();
+  };
 
-    if(state.qIndex < 7){
-      state.qIndex += 1;
-      saveDraft();
-      renderQuestion();
-      return;
-    }
-
-    // last question -> compute result
-    const r = computeResult();
-    if(!r) return; // blocked if not completed
-    renderResult();
+  $("#btnCancelLoading").onclick = ()=>{
+    stopLoading();
     show("v-s5");
   };
 
-  $("#btnResetTopic").onclick = ()=>{
-    if(!confirm("要清除此主題草稿並回到概覽嗎？")) return;
-    clearDraft(state.model, state.bankKey);
-    // reset current
-    state.qIndex=0;
-    state.answers={};
-    state.unsureCount=0;
-    state.result=null;
+  $("#btnSkipToResult").onclick = ()=>{
+    stopLoading();
+    state.result = computeResult();
     saveDraft();
-    renderOverview();
-    show("v-s3");
+    renderResult();
+    show("v-s7");
+  };
+
+  $("#btnRestart").onclick = ()=>{
+    if(confirm("要重新開始嗎？（只清除本主題回答）")){
+      state.qIndex = 0;
+      state.answers = {};
+      state.unsureCount = 0;
+      state.result = null;
+      saveDraft();
+      renderOverview();
+      show("v-s3");
+    }
   };
 
   $("#btnResetAll").onclick = ()=>{
-    if(!confirm("要清除所有模型/主題草稿並回到首頁嗎？")) return;
+    if(confirm("要清除『所有主題』草稿/結果並回到首頁嗎？")){
+      // 清除所有主題草稿
+      PRESET_KEYS.forEach(k => clearDraft(k));
+      localStorage.removeItem(LAST_BANK_KEY);
 
-    // clear all drafts across both models
-    ["M9","M12"].forEach(m=>{
-      Object.keys(bankFor(m)).forEach(k=> clearDraft(m,k));
-      try{ localStorage.removeItem(lastBankKeyFor(m)); }catch(e){}
-    });
-    try{ localStorage.removeItem(LAST_MODEL_KEY); }catch(e){}
-
-    // reset to defaults
-    state = {
-      model:"M9",
-      target:"",
-      bankKey: defaultBankFor("M9"),
-      prefs:{ tone:"direct", focus:"action", role:"individual" },
-      qIndex:0,
-      answers:{},
-      unsureCount:0,
-      result:null
-    };
-    $("#targetInput").value = "";
-    renderPresetChips();
-    saveDraft();
-    show("v-s1");
+      // 重置
+      state = {
+        target:"",
+        bankKey:"溝通協作",
+        prefs:{ tone:"direct", focus:"action", role:"individual" },
+        qIndex:0,
+        answers:{},
+        unsureCount:0,
+        result:null
+      };
+      $("#targetInput").value = "";
+      $$("#presetChips .chip").forEach(x=>x.classList.remove("active"));
+      renderOverview();
+      show("v-s1");
+    }
   };
 
-  $("#btnToReport").onclick = ()=>{
-    // 確保有結果
-    if(!state.result){
-      const r = computeResult();
-      if(!r) return;
+  $("#btnFullReport").onclick = ()=> show("v-s8");
+  $("#btnBackToSummary").onclick = ()=> show("v-s7");
+
+  $("#btnShare").onclick = async ()=>{
+    if(!state.result) return;
+    const r = state.result;
+    const dimsTxt = r.dimsOrder.map(d => `- ${d}：${r.dimStars[d]}★`).join("\n");
+
+    const text =
+`我的能力盤點結果（Beta Demo｜無後端）
+主題：${state.bankKey}
+總星等：${r.overallStars}★
+可信度：${Math.round(r.confidence*100)}%（已回答 ${r.answered}/${r.totalQ}）
+一句話：${r.label}
+
+向度：
+${dimsTxt}
+
+洞察：
+- ${r.insights[0]}
+- ${r.insights[1]}
+- ${r.insights[2]}
+
+立即行動：${r.actionNow}`;
+
+    try{
+      await navigator.clipboard.writeText(text);
+      alert("已複製到剪貼簿，可貼到 LINE/WeChat/Email。");
+    }catch(e){
+      alert("你的瀏覽器不允許自動複製，請手動複製：\n\n" + text);
     }
-    renderReport();
-    show("v-s6");
   };
 }
 
 /** ======================================================
  *  Boot
  * ====================================================== */
-document.addEventListener("DOMContentLoaded", ()=>{
+document.addEventListener("DOMContentLoaded", () => {
   setClock();
   setInterval(setClock, 10_000);
 
-  initFromStorage();
-
-  // init UI
+  // render chips
   renderPresetChips();
-  $("#targetInput").value = state.bankKey || "";
-  setPrefActive();
-  setModelActive();
-  renderOverview();
-  updateBuildLabel();
 
+  // restore last bank
+  const last = localStorage.getItem(LAST_BANK_KEY);
+  const initBank = (last && QUESTION_BANK[last]) ? last : "溝通協作";
+
+  // load draft for last bank
+  const draft = loadDraft(initBank);
+  if(draft){
+    setStateFromDraft(draft);
+  }else{
+    state.bankKey = initBank;
+    state.target = initBank;
+  }
+
+  // sync input
+  $("#targetInput").value = state.target || state.bankKey;
+
+  // highlight chip
+  $$("#presetChips .chip").forEach(ch=>{
+    ch.classList.toggle("active", normalize(ch.textContent) === normalize(state.bankKey));
+    ch.onclick = ()=>{
+      $("#targetInput").value = ch.textContent;
+      $$("#presetChips .chip").forEach(x=>x.classList.remove("active"));
+      ch.classList.add("active");
+    };
+  });
+
+  setPrefActive();
+  renderOverview();
   bind();
 });
 </script>
 </body>
 </html>
+
