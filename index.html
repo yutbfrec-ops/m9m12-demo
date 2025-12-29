@@ -3,1109 +3,946 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>M9/M12 能力盤點 Beta | Build: UIA-BANKB v1.0.0 2025-12-29</title>
-
+  <title>M9/M12 能力盤點 Beta Demo（方案B：多主題題庫 + 分主題草稿）</title>
   <style>
     :root{
-      --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
-              "Noto Sans TC","PingFang TC","Microsoft JhengHei", Arial, sans-serif;
-
-      --bg: #f6f8fb;
-      --ink:#0f172a;
-      --muted:#64748b;
-      --card:#ffffff;
-      --line: rgba(15,23,42,.10);
-
-      --brand:#2f6fed;
-      --brand-2:#1f55c8;
-
-      --chip:#ffffff;
-      --chip-line: rgba(15,23,42,.16);
-
-      --star:#f59e0b;
-      --star-off: rgba(15,23,42,.16);
-
-      /* 手機框（灰色） */
-      --frame-1:#5f6773;
-      --frame-2:#3f4651;
-      --frame-border: rgba(255,255,255,.18);
-      --frame-shadow: 0 18px 60px rgba(2,8,23,.26);
-
-      --radius: 28px;
-      --screen-radius: 22px;
+      --bg:#F6F8FC;
+      --ink:#0B1220;
+      --muted:#5C667A;
+      --line:#E6EAF2;
+      --card:#FFFFFF;
+      --primary:#2F6FED;
+      --primary-weak:#EAF1FF;
+      --shadow: 0 18px 60px rgba(12, 24, 46, .18);
+      --frame-1:#6F7785; /* 灰框 */
+      --frame-2:#3E4654;
+      --frame-inner:#0E1626;
+      --radius: 22px;
+      --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", Arial, sans-serif;
     }
 
     *{ box-sizing:border-box; }
     html,body{ height:100%; }
     body{
       margin:0;
-      font-family: var(--font);
-      color: var(--ink);
+      font-family:var(--font);
+      color:var(--ink);
       background:
-        radial-gradient(1100px 650px at 22% -10%, rgba(47,111,237,.12), transparent 55%),
-        radial-gradient(900px 520px at 95% 25%, rgba(245,158,11,.10), transparent 55%),
+        radial-gradient(1100px 600px at 20% -20%, rgba(47,111,237,.12), transparent 60%),
+        radial-gradient(900px 500px at 95% 20%, rgba(245,158,11,.10), transparent 55%),
         var(--bg);
       display:flex;
       align-items:center;
       justify-content:center;
-
-      /* 桌機保留空間（手機會覆蓋） */
-      padding: 24px;
+      padding: 10px; /* 讓手機瀏覽器更接近滿版 */
     }
 
-    /* 手機框容器：單層灰框（避免你之前黑+灰同時存在） */
+    /* 外框（灰色）*/
     .phone{
-      width: min(430px, 92vw);
+      width: min(98vw, 460px);
+      height: min(96vh, 980px);
       background: linear-gradient(180deg, var(--frame-1), var(--frame-2));
-      border: 1px solid var(--frame-border);
-      border-radius: 34px;
+      border-radius: 44px;
       padding: 14px;
-      box-shadow: var(--frame-shadow);
-    }
-
-    /* 內部「螢幕」 */
-    .screen{
-      background: var(--card);
-      border-radius: var(--screen-radius);
-      overflow: hidden;
+      box-shadow: var(--shadow);
       position: relative;
-      min-height: 780px; /* 桌機看到比較像 mockup */
+      overflow: hidden;
     }
 
-    /* 模擬上方狀態列（你說先不管時間，保留即可） */
-    .statusbar{
-      height: 52px;
-      padding: 10px 14px 0 14px;
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      color: rgba(15,23,42,.68);
-      font-size: 13px;
+    /* 內框（深色邊）*/
+    .shell{
+      width:100%;
+      height:100%;
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(0,0,0,.12));
+      border-radius: 36px;
+      padding: 10px;
+      position: relative;
     }
-    .status-icons{
+
+    /* 螢幕 */
+    .screen{
+      width:100%;
+      height:100%;
+      background: #fff;
+      border-radius: 28px;
+      overflow:hidden;
+      position:relative;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.05);
+    }
+
+    /* 假狀態列（不跟真實手機時間同步：固定 9:41） */
+    .statusbar{
+      position:absolute;
+      top:0;
+      left:0;
+      right:0;
+      height: 44px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding: 0 16px;
+      font-size: 14px;
+      color: rgba(0,0,0,.78);
+      pointer-events:none;
+    }
+    .sb-right{
       display:flex; gap:8px; align-items:center;
       font-size: 12px;
+      opacity:.9;
     }
     .pill{
-      width: 110px; height: 5px;
-      background: rgba(15,23,42,.16);
-      border-radius: 99px;
-      margin: 6px auto 0;
+      width: 70px; height: 5px;
+      background: rgba(0,0,0,.14);
+      border-radius:999px;
+      margin: 10px auto 0 auto;
     }
 
+    /* APP 內容容器 */
     .app{
-      padding: 18px 18px 14px;
+      position:absolute;
+      top:44px; left:0; right:0; bottom:0;
+      padding: 16px 18px 18px 18px;
+      overflow:auto;
+      -webkit-overflow-scrolling: touch;
+      background: #fff;
     }
 
     .topnav{
       display:flex;
       align-items:center;
       justify-content:space-between;
+      margin: 4px 0 10px 0;
       color: var(--muted);
-      font-size: 14px;
-      margin-bottom: 8px;
+      font-weight:600;
     }
-    .topnav .left{
+    .topnav .left, .topnav .right{
       display:flex; align-items:center; gap:8px;
       cursor:pointer;
       user-select:none;
-      color:#415a8a;
-      font-weight: 650;
     }
-    .topnav .mid{
-      font-weight: 650;
-      letter-spacing:.5px;
-      color:#64748b;
-    }
+    .topnav .mid{ font-weight:700; color: var(--muted); }
 
     h1{
+      margin: 8px 0 6px 0;
       font-size: 34px;
-      line-height: 1.15;
-      margin: 14px 0 10px;
-      letter-spacing:.2px;
+      line-height: 1.12;
+      letter-spacing: -0.02em;
     }
-    .sub{
+    p{
+      margin: 0 0 14px 0;
       color: var(--muted);
-      font-size: 14.5px;
-      line-height: 1.6;
-      margin-bottom: 14px;
+      line-height: 1.55;
     }
 
     .input{
       width:100%;
       border: 1px solid var(--line);
       border-radius: 14px;
-      padding: 12px 14px;
-      font-size: 16px;
+      padding: 14px 14px;
+      font-size: 18px;
       outline:none;
-      background:#fff;
-    }
-    .input:focus{
-      border-color: rgba(47,111,237,.45);
-      box-shadow: 0 0 0 4px rgba(47,111,237,.12);
+      background: #fff;
+      box-shadow: 0 1px 0 rgba(0,0,0,.02);
     }
 
-    .chips{ display:flex; flex-wrap:wrap; gap:10px; margin: 10px 0 2px; }
+    .chips{ display:flex; flex-wrap:wrap; gap:10px; margin: 10px 0 16px 0; }
     .chip{
-      border: 1px solid var(--chip-line);
-      background: var(--chip);
-      border-radius: 999px;
+      border:1px solid #D7DDEA;
       padding: 10px 14px;
-      font-size: 15px;
-      color:#1f2a44;
+      border-radius: 999px;
+      background:#fff;
+      font-weight:700;
+      color:#243047;
       cursor:pointer;
       user-select:none;
     }
     .chip.active{
       border-color: rgba(47,111,237,.55);
-      background: rgba(47,111,237,.10);
-      box-shadow: inset 0 0 0 1px rgba(47,111,237,.15);
-      font-weight: 650;
-      color:#1f4fb8;
+      background: rgba(47,111,237,.12);
+      color:#1D4ED8;
     }
 
     .rowlink{
-      margin-top: 12px;
       display:flex; align-items:center; justify-content:space-between;
-      padding: 12px 4px;
-      color:#415a8a;
-      font-weight: 700;
+      padding: 12px 2px;
+      border-top:1px solid transparent;
+      margin-top: 6px;
+      color:#163B7A;
+      font-weight:800;
       cursor:pointer;
       user-select:none;
     }
+    .rowlink span{ color: var(--muted); font-weight:700; }
 
-    .hero{
-      margin: 10px 0 14px;
-      height: 150px;
+    .illus{
+      height: 160px;
       border-radius: 18px;
       background:
-        radial-gradient(120px 120px at 35% 40%, rgba(47,111,237,.18), transparent 55%),
-        radial-gradient(160px 160px at 70% 65%, rgba(47,111,237,.12), transparent 55%),
-        linear-gradient(180deg, rgba(2,8,23,.02), rgba(2,8,23,0));
-      border: 1px solid rgba(15,23,42,.06);
-      position: relative;
+        radial-gradient(90px 90px at 40% 30%, rgba(47,111,237,.18), transparent 60%),
+        radial-gradient(120px 120px at 20% 70%, rgba(245,158,11,.18), transparent 60%),
+        radial-gradient(140px 140px at 75% 60%, rgba(99,102,241,.14), transparent 60%),
+        linear-gradient(180deg, #F7FAFF, #FFFFFF);
+      border: 1px solid #EEF2FB;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color: rgba(0,0,0,.25);
+      margin: 6px 0 14px 0;
+      position:relative;
       overflow:hidden;
     }
-    .hero:after{
+    .illus:after{
       content:"";
       position:absolute;
-      right: 16px; top: 18px;
-      width: 44px; height: 44px;
-      border-radius: 999px;
+      width: 120px; height: 120px;
+      border-radius:999px;
+      background: rgba(47,111,237,.10);
+      left: 30px; bottom: -40px;
+      filter: blur(0px);
+    }
+    .illus .plus{
+      position:absolute;
+      width: 44px; height:44px;
+      border-radius:999px;
       background: rgba(47,111,237,.14);
-      border: 1px solid rgba(47,111,237,.18);
-    }
-    .hero:before{
-      content:"+";
-      position:absolute;
-      right: 28px; top: 18px;
-      font-size: 22px;
-      color:#1f55c8;
-      font-weight: 800;
-      line-height: 44px;
-    }
-    .hero .moon{
-      position:absolute;
-      left: 18px; bottom: 18px;
-      width: 44px; height: 44px;
-      border-radius: 999px;
-      background: rgba(245,158,11,.18);
-      border: 1px solid rgba(245,158,11,.24);
+      right: 44px; top: 52px;
       display:flex; align-items:center; justify-content:center;
-      font-weight: 900;
-      color:#b45309;
-    }
-    .hero .note{
-      position:absolute;
-      left: 72px; bottom: 18px;
-      width: 160px; height: 60px;
-      border-radius: 14px;
-      background: rgba(255,255,255,.8);
-      border: 1px solid rgba(15,23,42,.08);
-      box-shadow: 0 10px 30px rgba(2,8,23,.06);
-    }
-    .hero .note:after{
-      content:"";
-      position:absolute; left: 16px; top: 18px;
-      width: 120px; height: 6px;
-      border-radius: 99px;
-      background: rgba(15,23,42,.14);
-      box-shadow: 0 14px 0 rgba(15,23,42,.10);
+      color:#2F6FED;
+      font-size: 24px;
+      font-weight:900;
     }
 
     .btn{
       width:100%;
       border:0;
       border-radius: 16px;
-      padding: 14px 16px;
+      padding: 16px 16px;
       font-size: 18px;
-      font-weight: 800;
-      color:#fff;
-      background: linear-gradient(180deg, var(--brand), var(--brand-2));
-      box-shadow: 0 12px 30px rgba(47,111,237,.25);
+      font-weight: 900;
       cursor:pointer;
-      user-select:none;
+      background: var(--primary);
+      color:#fff;
+      box-shadow: 0 10px 24px rgba(47,111,237,.26);
     }
     .btn.secondary{
-      margin-top:10px;
-      background: #eef3ff;
-      color:#1f3f8f;
-      box-shadow:none;
-      border: 1px solid rgba(47,111,237,.20);
-      font-weight: 800;
-    }
-    .btn.ghost{
-      margin-top:10px;
-      background: #ffffff;
+      background:#F2F5FB;
       color:#334155;
       box-shadow:none;
-      border: 1px solid rgba(15,23,42,.12);
-      font-weight: 800;
+      border:1px solid #E6EAF2;
+      margin-top: 10px;
+    }
+    .btn.ghost{
+      background:#fff;
+      color:#334155;
+      box-shadow:none;
+      border:1px solid #E6EAF2;
+      margin-top: 10px;
     }
 
     .hint{
-      margin-top: 10px;
-      font-size: 12.5px;
-      color: rgba(15,23,42,.55);
-      line-height: 1.45;
+      margin-top: 12px;
+      font-size: 14px;
+      color: #6B7280;
+      line-height: 1.55;
     }
 
-    .buildbar{
-      padding: 10px 18px 14px;
-      font-size: 12px;
-      color: rgba(15,23,42,.55);
-      display:flex;
-      justify-content:space-between;
-      gap:12px;
-      border-top: 1px solid rgba(15,23,42,.06);
-      background: linear-gradient(180deg, rgba(2,8,23,0), rgba(2,8,23,.02));
-    }
-    .buildbar .leftnote{ flex:1; }
-    .buildbar .build{
-      white-space:nowrap;
-      font-weight: 700;
-      color: rgba(15,23,42,.62);
-    }
-
-    /* 卡片樣式 */
     .card{
-      border: 1px solid rgba(15,23,42,.10);
+      background: var(--card);
+      border: 1px solid #E6EAF2;
       border-radius: 18px;
-      background: #fff;
-      padding: 16px;
-      box-shadow: 0 10px 24px rgba(2,8,23,.05);
+      padding: 14px 14px;
+      box-shadow: 0 8px 28px rgba(18, 38, 75, .06);
+      margin: 12px 0;
     }
-    .card + .card{ margin-top: 12px; }
-
+    .meta{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-weight:700;
+      font-size: 14px;
+    }
     .bigscore{
-      display:flex; align-items:flex-end; gap:12px;
-      margin-bottom: 10px;
+      display:flex;
+      align-items:flex-start;
+      gap: 12px;
+      margin-top: 10px;
     }
     .bigscore .n{
-      font-size: 58px; font-weight: 900; line-height: .95;
-      color:#0b1220;
+      font-size: 52px;
+      font-weight: 950;
+      line-height: 1;
     }
-    .bigscore .t{
-      font-weight: 900; font-size: 18px; color:#1f3f8f;
+    .bigscore .txt{
+      font-weight: 900;
+      font-size: 18px;
+      margin-top: 6px;
     }
-    .stars{ display:flex; gap:4px; }
-    .star{ font-size: 16px; line-height: 1; }
-    .star.on{ color: var(--star); }
-    .star.off{ color: var(--star-off); }
+    .stars{ display:flex; gap:4px; margin-top: 6px; }
+    .star{
+      width: 16px; height:16px;
+      clip-path: polygon(50% 0%, 62% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 38% 35%);
+      background: #D5DAE6;
+    }
+    .star.on{ background: #F59E0B; }
 
-    .kv{
-      display:flex; justify-content:space-between; align-items:center;
-      padding: 10px 0;
-      border-top: 1px solid rgba(15,23,42,.08);
+    .list{
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top:1px solid #EEF2FB;
     }
-    .kv:first-of-type{ border-top:0; }
-    .kv .k{ color:#334155; font-weight: 750; }
-    .kv .v{ color:#0f172a; font-weight: 850; }
+    .row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding: 10px 2px;
+      font-weight:800;
+      color:#23314A;
+    }
+    .row .label{ font-weight:900; }
+    .row .stars{ margin:0; }
 
     .section-title{
-      margin: 14px 0 10px;
-      font-size: 18px;
-      font-weight: 900;
-      color:#334155;
-    }
-
-    .insight{
-      border: 1px solid rgba(15,23,42,.10);
-      border-radius: 16px;
-      padding: 14px;
-      background: #fff;
-    }
-    .insight + .insight{ margin-top: 10px; }
-    .insight .tag{
-      font-weight: 900;
-      color:#475569;
-      margin-bottom: 6px;
-    }
-    .insight .text{
-      color:#334155;
-      line-height: 1.55;
-      font-size: 14.5px;
-    }
-
-    /* 進階設定（彈窗） */
-    .modalback{
-      position:absolute; inset:0;
-      background: rgba(2,8,23,.35);
-      display:none;
-      align-items:flex-end;
-      justify-content:center;
-      padding: 12px;
-    }
-    .modal{
-      width:100%;
-      border-radius: 18px;
-      background:#fff;
-      border: 1px solid rgba(15,23,42,.10);
-      box-shadow: 0 20px 60px rgba(2,8,23,.25);
-      padding: 14px;
-    }
-    .modal h3{
-      margin: 6px 2px 10px;
-      font-size: 16px;
+      margin: 14px 0 8px 0;
+      font-size: 20px;
       font-weight: 950;
-      color:#0f172a;
+      color:#1F2A44;
     }
-    .seg{
-      display:flex; gap:10px; margin: 10px 0 14px;
-    }
-    .seg button{
-      flex:1;
-      border-radius: 999px;
-      padding: 10px 12px;
-      border: 1px solid rgba(15,23,42,.14);
-      background:#fff;
-      font-weight: 900;
-      color:#334155;
-      cursor:pointer;
-    }
-    .seg button.active{
-      border-color: rgba(47,111,237,.55);
-      background: rgba(47,111,237,.10);
-      color:#1f4fb8;
-      box-shadow: inset 0 0 0 1px rgba(47,111,237,.15);
-    }
-    .modal .actions{
-      display:flex; gap:10px; margin-top: 10px;
-    }
-    .modal .actions button{
-      flex:1;
+
+    .pillbox{
+      border:1px solid #E6EAF2;
       border-radius: 14px;
-      padding: 12px 12px;
-      font-weight: 950;
-      cursor:pointer;
-      border: 1px solid rgba(15,23,42,.12);
+      padding: 12px;
       background:#fff;
       color:#334155;
-    }
-    .modal .actions button.primary{
-      border:0;
-      background: linear-gradient(180deg, var(--brand), var(--brand-2));
-      color:#fff;
+      line-height:1.55;
     }
 
-    /* 手機滿版貼近：重點在這段 */
+    .actions2{
+      display:flex; gap:10px;
+      margin-top: 12px;
+    }
+    .actions2 .btn{ flex:1; }
+    .actions2 .btn.secondary{ margin-top:0; }
+
+    /* build 顯示：每頁固定在右上角區塊（靠近狀態列下方） */
+    .build{
+      position:absolute;
+      top: 48px;
+      right: 16px;
+      font-size: 12px;
+      color: rgba(0,0,0,.55);
+      background: rgba(255,255,255,.75);
+      border: 1px solid rgba(230,234,242,.9);
+      padding: 6px 8px;
+      border-radius: 10px;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      user-select:text;
+    }
+
+    /* 更貼近滿版時，避免左右留白太多 */
     @media (max-width: 520px){
-      body{
-        padding: 0; /* 移除桌機留白 */
-        background: var(--bg); /* 手機簡化背景，避免視覺像「外框留白」 */
-      }
-      .phone{
-        width: calc(100vw - 12px); /* 左右各 6px，接近滿版 */
-        margin: 6px;
-        border-radius: 30px;
-        padding: 12px;
-      }
-      .screen{
-        min-height: calc(100vh - 12px - 24px); /* 讓畫面更接近滿版高度 */
-      }
+      body{ padding: 6px; }
+      .phone{ width: 98vw; height: 96vh; border-radius: 40px; }
+      .shell{ border-radius: 32px; }
+      .screen{ border-radius: 26px; }
     }
   </style>
 </head>
 
 <body>
-  <div class="phone">
-    <div class="screen" id="screen">
-
-      <div class="statusbar">
-        <div id="fakeTime">08:07</div>
-        <div class="status-icons">▮▮▮ ⚡ 🔋</div>
-      </div>
-      <div class="pill"></div>
-
-      <div class="app" id="app"></div>
-
-      <div class="buildbar">
-        <div class="leftnote" id="leftNote">提示：這是 Beta Demo（無後端）。資料只存在你本機瀏覽器（可清除）。每個主題會各自保存草稿（互不覆蓋）。</div>
-        <div class="build" id="buildText"></div>
-      </div>
-
-      <!-- Advanced Settings Modal -->
-      <div class="modalback" id="modalBack">
-        <div class="modal">
-          <h3>進階設定</h3>
-
-          <div style="color:#64748b;font-size:13px;line-height:1.5;">
-            你可以先用 <b>M9</b>（較快）做導流，再用 <b>M12</b>（較深）做付費報告／顧問交付。
-          </div>
-
-          <div class="section-title" style="margin-top:12px;">模式切換（M9 / M12）</div>
-          <div class="seg">
-            <button id="btnM9" type="button">M9（快速）</button>
-            <button id="btnM12" type="button">M12（深度）</button>
-          </div>
-
-          <div class="actions">
-            <button type="button" id="btnCancel">取消</button>
-            <button type="button" class="primary" id="btnSave">儲存</button>
+  <div class="phone" role="application" aria-label="M9/M12 Demo">
+    <div class="shell">
+      <div class="screen">
+        <div class="statusbar">
+          <div>9:41</div>
+          <div class="sb-right">
+            <span>▮▮▮</span><span>⚡</span><span>🔋</span>
           </div>
         </div>
-      </div>
+        <div class="pill"></div>
 
+        <div class="build" id="buildText"></div>
+        <div class="app" id="app"></div>
+      </div>
     </div>
   </div>
 
-<script>
-/* =========================================================
-   只改這一行：Build 長版（定案格式）
-   ========================================================= */
-const BUILD = "Build: UIA-BANKB v1.0.0 2025-12-29";
+  <script>
+    /***********************
+     * Build / Versioning
+     ***********************/
+    const BUILD = {
+      product: "UIA-BANKB",
+      version: "v1.0.1",
+      date: "2025-12-29",
+      buildNo: "B01"
+    };
 
-/* =========================================================
-   Demo 設定：模式（M9/M12）存本機
-   ========================================================= */
-const LS_MODE_KEY = "m9m12_mode";
-const LS_TOPIC_KEY = "m9m12_topic";
-const LS_DRAFT_PREFIX = "m9m12_draft"; // 會再加上 mode+topic 做隔離
+    /***********************
+     * Helpers (safe)
+     ***********************/
+    function el(tag, cls, ...parts){
+      const e = document.createElement(tag);
+      if (cls) e.className = cls;
 
-const BANK = {
-  // 模式越深，題數越多、洞察越長（UI 邏輯不變）
-  M9: {
-    name: "M9（快速）",
-    questionCount: 6,
-    insightStyle: "short"
-  },
-  M12: {
-    name: "M12（深度）",
-    questionCount: 10,
-    insightStyle: "long"
-  }
-};
+      for (const p of parts){
+        if (p === null || p === undefined) continue;
 
-const TOPICS = [
-  { id:"溝通協作", label:"溝通協作" },
-  { id:"執行推進", label:"執行推進" },
-  { id:"問題解決", label:"問題解決" },
-  { id:"領導帶人", label:"領導帶人" }
-];
-
-const DIMENSIONS = [
-  "協作推進","溝通清晰","共識對齊","提問澄清","影響力","衝突處理","回饋吸收","協作規則"
-];
-
-/* ===== App State ===== */
-let state = {
-  page: "home",            // home | quiz | done | summary
-  mode: loadMode(),
-  topic: loadTopic(),
-  answers: [],
-  idx: 0
-};
-
-init();
-
-/* =========================================================
-   UI Render
-   ========================================================= */
-function init(){
-  // Build 顯示 + title
-  document.getElementById("buildText").textContent = BUILD;
-  document.title = `M9/M12 能力盤點 Beta | ${BUILD}`;
-
-  // fake time（保留即可）
-  document.getElementById("fakeTime").textContent = getHHMM();
-
-  // Modal events
-  hookModal();
-
-  // Load draft if exists
-  loadDraftIfAny();
-
-  // Render
-  render();
-}
-
-function render(){
-  const app = document.getElementById("app");
-  app.innerHTML = "";
-
-  if(state.page === "home") return renderHome(app);
-  if(state.page === "quiz") return renderQuiz(app);
-  if(state.page === "done") return renderDone(app);
-  if(state.page === "summary") return renderSummary(app);
-}
-
-function renderHome(root){
-  const topnav = el("div","topnav",
-    el("div","left",""),
-    el("div","mid",""),
-    el("div","","")
-  );
-  topnav.querySelector(".mid").textContent = "";
-  root.appendChild(topnav);
-
-  root.appendChild(el("h1","",`你想盤點哪個\n職場能力？`));
-
-  const sub = el("div","sub",
-    `像做「旅遊書」一樣，3–5 分鐘完成盤點，立即拿到星等與建議。` +
-    `\n目前模式：` + `<b>${BANK[state.mode].name}</b>`
-  );
-  sub.innerHTML = sub.innerHTML.replaceAll("\n","<br>");
-  root.appendChild(sub);
-
-  const input = el("input","input","");
-  input.placeholder = "例如：溝通協作 / 問題解決";
-  input.value = state.topic || "";
-  input.addEventListener("input", (e)=>{
-    state.topic = e.target.value.trim();
-    saveTopic(state.topic);
-  });
-  root.appendChild(input);
-
-  const chips = el("div","chips","");
-  TOPICS.forEach(t=>{
-    const c = el("div","chip",t.label);
-    if(state.topic === t.id) c.classList.add("active");
-    c.addEventListener("click", ()=>{
-      state.topic = t.id;
-      saveTopic(state.topic);
-      input.value = state.topic;
-      [...chips.children].forEach(x=>x.classList.remove("active"));
-      c.classList.add("active");
-    });
-    chips.appendChild(c);
-  });
-  root.appendChild(chips);
-
-  const link = el("div","rowlink",`進階設定 <span style="color:#94a3b8;font-weight:900;">›</span>`);
-  link.addEventListener("click", openModal);
-  root.appendChild(link);
-
-  root.appendChild(el("div","hero",
-    `<div class="moon">◝</div><div class="note"></div>`
-  ));
-
-  const btn = el("button","btn","下一步");
-  btn.addEventListener("click", ()=>{
-    if(!state.topic){
-      shake(input);
-      return;
-    }
-    // 重新切題目時，先載入該 topic draft
-    loadDraftIfAny(true);
-    startQuiz();
-  });
-  root.appendChild(btn);
-
-  // 下方提示文字交給 buildbar 的 leftNote（不用在這裡重複）
-}
-
-function renderQuiz(root){
-  const top = el("div","topnav",
-    el("div","left","‹ 返回"),
-    el("div","mid","盤點"),
-    el("div","","")
-  );
-  top.querySelector(".left").addEventListener("click", ()=>{
-    // 回首頁不清草稿
-    state.page = "home";
-    render();
-  });
-  root.appendChild(top);
-
-  const title = el("h1","",`主題：${state.topic}`);
-  title.style.fontSize = "28px";
-  root.appendChild(title);
-
-  root.appendChild(el("div","sub",
-    `模式：<b>${BANK[state.mode].name}</b>　|　已回答 <b>${state.idx+1}/${state.answers.length}</b>`
-  ));
-
-  const card = el("div","card","");
-  card.appendChild(el("div","",`第 <b>${state.idx+1}</b> 題`));
-  const q = el("div","",`在「${state.topic}」情境下，我通常能做到：`);
-  q.style.marginTop = "8px";
-  q.style.fontWeight = "900";
-  card.appendChild(q);
-
-  const dim = DIMENSIONS[state.idx % DIMENSIONS.length];
-  const hint = el("div","",`（評估面向：${dim}）`);
-  hint.style.marginTop = "6px";
-  hint.style.color = "#64748b";
-  hint.style.fontSize = "13px";
-  card.appendChild(hint);
-
-  // 1~5 選擇
-  const chips = el("div","chips","");
-  const current = state.answers[state.idx] ?? 0;
-  [1,2,3,4,5].forEach(n=>{
-    const c = el("div","chip", `${n} 分`);
-    if(current === n) c.classList.add("active");
-    c.addEventListener("click", ()=>{
-      state.answers[state.idx] = n;
-      saveDraft();
-      render();
-    });
-    chips.appendChild(c);
-  });
-  card.appendChild(chips);
-
-  // 下一題
-  const next = el("button","btn", state.idx === state.answers.length-1 ? "完成" : "下一題");
-  next.style.marginTop = "12px";
-  next.addEventListener("click", ()=>{
-    if(!state.answers[state.idx]){
-      shake(card);
-      return;
-    }
-    if(state.idx < state.answers.length-1){
-      state.idx += 1;
-      saveDraft();
-      render();
-    }else{
-      state.page = "done";
-      saveDraft();
-      render();
-    }
-  });
-
-  const prev = el("button","btn secondary","上一題");
-  prev.addEventListener("click", ()=>{
-    if(state.idx > 0){
-      state.idx -= 1;
-      saveDraft();
-      render();
-    }else{
-      state.page = "home";
-      render();
-    }
-  });
-
-  root.appendChild(card);
-  root.appendChild(next);
-  root.appendChild(prev);
-}
-
-function renderDone(root){
-  const top = el("div","topnav",
-    el("div","left","‹ 返回"),
-    el("div","mid","完成"),
-    el("div","","")
-  );
-  top.querySelector(".left").addEventListener("click", ()=>{
-    state.page = "quiz";
-    render();
-  });
-  root.appendChild(top);
-
-  root.appendChild(el("h1","",`已完成回答，\n要生成結果嗎？`));
-  const sub = el("div","sub",
-    `你可以回到上一題修改，也可以直接生成星等與洞察。<br>` +
-    `主題：<b>${state.topic}</b>　|　模式：<b>${BANK[state.mode].name}</b>`
-  );
-  root.appendChild(sub);
-
-  const card = el("div","card","");
-  card.innerHTML = `
-    <div style="display:flex;justify-content:space-between;gap:12px;">
-      <div>
-        <div style="color:#64748b;font-weight:800;">已回答</div>
-        <div style="font-size:18px;font-weight:950;margin-top:2px;">${state.answers.filter(Boolean).length}/${state.answers.length}</div>
-      </div>
-      <div style="text-align:right;">
-        <div style="color:#64748b;font-weight:800;">主題</div>
-        <div style="font-size:18px;font-weight:950;margin-top:2px;">${state.topic}</div>
-      </div>
-    </div>
-    <div style="margin-top:10px;color:#64748b;font-size:13px;line-height:1.5;">
-      生成分兩步：先計算星等 → 再生成洞察（更像商業工具的可信流程）。
-    </div>
-  `;
-  root.appendChild(card);
-
-  const gen = el("button","btn","生成我的結果");
-  gen.addEventListener("click", ()=>{
-    state.page = "summary";
-    render();
-  });
-  root.appendChild(gen);
-
-  const restart = el("button","btn secondary","重新開始");
-  restart.addEventListener("click", ()=>{
-    clearDraft();
-    state.answers = [];
-    state.idx = 0;
-    state.page = "home";
-    render();
-  });
-  root.appendChild(restart);
-}
-
-function renderSummary(root){
-  const top = el("div","topnav",
-    el("div","left","‹ 回首頁"),
-    el("div","mid","結果摘要"),
-    el("div","","")
-  );
-  top.querySelector(".left").addEventListener("click", ()=>{
-    state.page = "home";
-    render();
-  });
-  root.appendChild(top);
-
-  root.appendChild(el("h1","",`你的結果摘要`));
-  root.appendChild(el("div","sub",`先看重點卡片，再決定要不要展開完整版。`));
-
-  const score = calcScore();
-  const overallStars = toStars(score.overall);
-
-  const card = el("div","card","");
-  const gradeText = score.overall >= 4 ? "高可用｜可直接落地"
-                  : score.overall >= 3 ? "中等可用｜需建立一致方法"
-                  : "風險偏高｜先修正關鍵習慣";
-  card.appendChild(el("div","bigscore",`
-    <div class="n">${Math.round(score.overall)}</div>
-    <div>
-      <div class="t">${gradeText}</div>
-      <div style="margin-top:6px;" class="stars">${renderStars(overallStars)}</div>
-      <div style="margin-top:6px;color:#64748b;font-size:13px;">
-        可信度：95%（已回答 ${score.answered}/${score.total}）
-      </div>
-    </div>
-  `));
-
-  // 維度星等（固定 8 條，方便展示）
-  score.dims.forEach(d=>{
-    const row = el("div","kv","");
-    row.innerHTML = `
-      <div class="k">${d.name}</div>
-      <div class="v">
-        <span class="stars" style="justify-content:flex-end;display:flex;">${renderStars(d.stars)}</span>
-      </div>
-    `;
-    card.appendChild(row);
-  });
-
-  root.appendChild(card);
-
-  // 洞察（依模式長短）
-  root.appendChild(el("div","section-title","三個洞察"));
-  const insights = buildInsights(score, BANK[state.mode].insightStyle);
-
-  insights.forEach(it=>{
-    const box = el("div","insight","");
-    box.innerHTML = `
-      <div class="tag">${it.tag}</div>
-      <div class="text">${it.text}</div>
-    `;
-    root.appendChild(box);
-  });
-
-  // 立即行動
-  const action = el("div","card","");
-  action.innerHTML = `
-    <div style="color:#475569;font-weight:950;">立即行動（今天就能做）</div>
-    <div style="margin-top:10px;font-size:20px;line-height:1.35;font-weight:950;">
-      下次交辦前先寫 1 行「目的/輸出/截止時間」並附一個範例。
-    </div>
-  `;
-  root.appendChild(action);
-
-  // CTA
-  const expand = el("button","btn","展開完整版");
-  expand.addEventListener("click", ()=>{
-    alert("Demo：完整版可在下一版接 AI 報告模板 / Google Sheet 星等計算。");
-  });
-  root.appendChild(expand);
-
-  const share = el("button","btn secondary","分享摘要");
-  share.addEventListener("click", async ()=>{
-    const text = `${BUILD}\n主題：${state.topic}\n模式：${BANK[state.mode].name}\n星等：${Math.round(score.overall)}\n（Demo）`;
-    try{
-      if(navigator.share){
-        await navigator.share({ title: "M9/M12 盤點摘要", text });
-      }else{
-        await navigator.clipboard.writeText(text);
-        alert("已複製摘要到剪貼簿");
+        if (typeof p === "string"){
+          e.insertAdjacentHTML("beforeend", p);
+          continue;
+        }
+        if (p instanceof Node){
+          e.appendChild(p);
+          continue;
+        }
+        e.appendChild(document.createTextNode(String(p)));
       }
-    }catch(e){
-      // ignore
+      return e;
     }
-  });
-  root.appendChild(share);
 
-  const clear = el("button","btn ghost","清除草稿/重做");
-  clear.addEventListener("click", ()=>{
-    clearDraft();
-    state.page = "home";
-    state.answers = [];
-    state.idx = 0;
+    function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
+
+    function stars(n){
+      const wrap = el("div","stars");
+      const k = clamp(Math.round(n), 0, 5);
+      for(let i=1;i<=5;i++){
+        wrap.appendChild(el("div", "star" + (i<=k ? " on": "")));
+      }
+      return wrap;
+    }
+
+    function uid(){ return Math.random().toString(16).slice(2) + Date.now().toString(16); }
+
+    /***********************
+     * Bank: M9 / M12
+     * （Demo 用：兩套維度不同，方便測差異）
+     ***********************/
+    const BANK = {
+      M9: {
+        name: "M9（職場核心能力）",
+        topics: [
+          { key:"collab", label:"溝通協作" },
+          { key:"drive", label:"執行推進" },
+          { key:"solve", label:"問題解決" },
+          { key:"lead",  label:"領導帶人" }
+        ],
+        dims: [
+          "溝通清晰","協作推進","共識對齊","提問澄清",
+          "影響力","衝突處理","回饋吸收","協作規則"
+        ]
+      },
+      M12: {
+        name: "M12（管理/成長能力）",
+        topics: [
+          { key:"plan", label:"策略規劃" },
+          { key:"biz",  label:"商業敏感" },
+          { key:"ops",  label:"流程治理" },
+          { key:"team", label:"人才培育" }
+        ],
+        dims: [
+          "目標拆解","優先順序","風險控管","資源協調",
+          "數據判讀","跨部門推動","流程落地","人才教練"
+        ]
+      }
+    };
+
+    /***********************
+     * State
+     ***********************/
+    const app = document.getElementById("app");
+    const buildText = document.getElementById("buildText");
+
+    const STATE = {
+      route: "home",
+      model: "M9",              // M9 or M12
+      topicKey: null,           // selected topic
+      topicLabel: "",
+      answered: 0,
+      total: 8,
+      draftId: null,            // per model+topic
+      // 8 dummy answers (1..5)
+      answers: Array(8).fill(null),
+      // computed summary
+      summary: null
+    };
+
+    function storageKeyBase(){
+      return `m9m12_demo__${STATE.model}__${STATE.topicKey || "none"}`;
+    }
+
+    function setBuildLabel(){
+      const modelName = BANK[STATE.model].name;
+      buildText.textContent = `Build: ${BUILD.product} ${BUILD.version} ${BUILD.date} (${BUILD.buildNo}) · ${modelName}`;
+      document.title = `M9/M12 Demo · ${BUILD.product} ${BUILD.version} · ${modelName}`;
+    }
+
+    /***********************
+     * Navigation
+     ***********************/
+    function go(route){
+      STATE.route = route;
+      render();
+    }
+
+    function resetAll(){
+      STATE.route="home";
+      STATE.topicKey=null;
+      STATE.topicLabel="";
+      STATE.answered=0;
+      STATE.total=8;
+      STATE.draftId=null;
+      STATE.answers = Array(8).fill(null);
+      STATE.summary=null;
+      render();
+    }
+
+    /***********************
+     * Demo scoring
+     ***********************/
+    function computeSummary(){
+      // Demo：用 answers 生成 8 個維度星等（1..5）
+      const dims = BANK[STATE.model].dims.slice(0,8);
+
+      // 若沒填，給中間值 3
+      const vals = STATE.answers.map(v => (v==null?3:v));
+
+      // 以各題分配到各維度（1:1）
+      const perDim = dims.map((d, i) => ({ dim:d, score: clamp(vals[i],1,5) }));
+
+      const avg = perDim.reduce((a,x)=>a+x.score,0)/perDim.length;
+      const level = clamp(Math.round(avg),1,5);
+
+      // 找最佳/風險
+      const sorted = [...perDim].sort((a,b)=>b.score-a.score);
+      const best = sorted[0];
+      const worst = sorted[sorted.length-1];
+
+      const insight = [
+        `洞察 1（優勢）｜優勢在「${best.dim}」：你通常能用更有效的方法推進。`,
+        `洞察 2（風險）｜短板在「${worst.dim}」：這是造成卡關/重工的主要風險點。`,
+        `洞察 3（升級）｜先把「一件事做到可預期」：用固定流程處理 1–2 個高頻問題。`
+      ];
+
+      return {
+        level,
+        headline:
+          level>=4 ? "高可用｜可直接放大複製" :
+          level===3 ? "中等可用｜需建立一致方法" :
+          "風險偏高｜先修正關鍵習慣",
+        confidence: 95,
+        perDim,
+        insight,
+        action: "下次交辦前先寫 1 行「目的/輸出/截止時間」並附一個範例。"
+      };
+    }
+
+    /***********************
+     * Draft (per model+topic, non-overwrite across topics)
+     ***********************/
+    function loadDraft(){
+      if(!STATE.topicKey) return;
+      const k = storageKeyBase() + "__draft";
+      const raw = localStorage.getItem(k);
+      if(!raw) return;
+
+      try{
+        const d = JSON.parse(raw);
+        if(d && Array.isArray(d.answers)){
+          STATE.answers = d.answers.slice(0,8);
+          STATE.answered = STATE.answers.filter(v=>v!=null).length;
+          STATE.draftId = d.draftId || null;
+        }
+      }catch(e){}
+    }
+
+    function saveDraft(){
+      if(!STATE.topicKey) return;
+      const k = storageKeyBase() + "__draft";
+      const payload = {
+        draftId: STATE.draftId || uid(),
+        model: STATE.model,
+        topicKey: STATE.topicKey,
+        answers: STATE.answers
+      };
+      STATE.draftId = payload.draftId;
+      localStorage.setItem(k, JSON.stringify(payload));
+    }
+
+    function clearDraft(){
+      if(!STATE.topicKey) return;
+      const k = storageKeyBase() + "__draft";
+      localStorage.removeItem(k);
+      STATE.answers = Array(8).fill(null);
+      STATE.answered = 0;
+      STATE.draftId = null;
+      STATE.summary = null;
+    }
+
+    /***********************
+     * UI blocks
+     ***********************/
+    function topNav({leftText, midText, rightText, onLeft, onRight}){
+      const left = el("div","left", `‹ ${leftText || ""}`);
+      const mid  = el("div","mid",  midText || "");
+      const right= el("div","right", rightText || "");
+
+      if(onLeft){
+        left.style.pointerEvents="auto";
+        left.addEventListener("click", onLeft);
+      }
+      if(onRight){
+        right.style.pointerEvents="auto";
+        right.addEventListener("click", onRight);
+      }
+      const bar = el("div","topnav", left, mid, right);
+      return bar;
+    }
+
+    function renderHome(){
+      const model = BANK[STATE.model];
+      const topicChips = el("div","chips");
+
+      model.topics.forEach(t=>{
+        const c = el("div","chip" + (STATE.topicKey===t.key ? " active":""), t.label);
+        c.addEventListener("click", ()=>{
+          STATE.topicKey = t.key;
+          STATE.topicLabel = t.label;
+          // 選 topic 時，載入該 topic 的草稿（互不覆蓋）
+          STATE.answers = Array(8).fill(null);
+          STATE.answered = 0;
+          STATE.draftId = null;
+          STATE.summary = null;
+          loadDraft();
+          render();
+        });
+        topicChips.appendChild(c);
+      });
+
+      const input = el("input","input");
+      input.placeholder = "例如：溝通協作 / 問題解決";
+      input.value = STATE.topicLabel || "";
+      input.addEventListener("input", ()=>{
+        STATE.topicLabel = input.value.trim();
+      });
+
+      const adv = el("div","rowlink",
+        el("div","", "進階設定"),
+        el("span","", "›")
+      );
+      adv.addEventListener("click", ()=>go("settings"));
+
+      const illus = el("div","illus", el("div","plus","+"));
+
+      const next = el("button","btn","下一步");
+      next.addEventListener("click", ()=>{
+        if(!STATE.topicKey){
+          // 若沒點 chip，允許用輸入框選最近似（Demo：直接選第一個）
+          STATE.topicKey = model.topics[0].key;
+          STATE.topicLabel = model.topics[0].label;
+        }
+        // 進題目：分主題草稿（BANKB 特性）
+        loadDraft();
+        go("quiz");
+      });
+
+      const hint = el("div","hint",
+        `提示：這是 Beta Demo（無後端）。資料只存在你本機瀏覽器（可清除）。<br>` +
+        `每個主題會各自保存草稿（互不覆蓋）。`
+      );
+
+      app.replaceChildren(
+        topNav({leftText:"", midText:"", rightText:""}),
+        el("h1","", "你想盤點哪個<br>職場能力？"),
+        el("p","", "像做「旅遊書」一樣，3–5 分鐘完成盤點，立即拿到星等與建議。"),
+        input,
+        topicChips,
+        adv,
+        illus,
+        next,
+        hint
+      );
+    }
+
+    function renderSettings(){
+      const modelSel = el("div","card",
+        el("div","meta",
+          el("div","", "<b>模型切換</b>"),
+          el("div","", "M9 / M12")
+        )
+      );
+
+      const chips = el("div","chips");
+      ["M9","M12"].forEach(k=>{
+        const c = el("div","chip" + (STATE.model===k ? " active":""), BANK[k].name);
+        c.addEventListener("click", ()=>{
+          // 切模型：主題清空，避免混用
+          STATE.model = k;
+          STATE.topicKey = null;
+          STATE.topicLabel = "";
+          STATE.answers = Array(8).fill(null);
+          STATE.answered = 0;
+          STATE.draftId = null;
+          STATE.summary = null;
+          setBuildLabel();
+          render();
+        });
+        chips.appendChild(c);
+      });
+
+      modelSel.appendChild(chips);
+
+      const explain = el("div","pillbox",
+        "為什麼要做 M9/M12 雙模式？<br>" +
+        "• <b>M9</b>：偏「現場可用」的核心職場能力（溝通/推進/解題/帶人）。<br>" +
+        "• <b>M12</b>：偏「成長與管理」的能力（策略/商業/流程/培育）。<br>" +
+        "用途：同一套 UI/UX 可以快速驗證兩種市場定位與報告語氣，方便你跟朋友在中國/台灣兩端對齊。"
+      );
+
+      const back = el("button","btn secondary","返回");
+      back.addEventListener("click", ()=>go("home"));
+
+      app.replaceChildren(
+        topNav({leftText:"返回", midText:"進階設定", rightText:"", onLeft: ()=>go("home")}),
+        modelSel,
+        explain,
+        back
+      );
+    }
+
+    function renderQuiz(){
+      const model = BANK[STATE.model];
+
+      const title = el("div","card",
+        el("div","meta",
+          el("div","", `<b>主題</b><br>${STATE.topicLabel || model.topics.find(x=>x.key===STATE.topicKey)?.label || "-"}`),
+          el("div","", `<b>進度</b><br>${STATE.answered} / ${STATE.total}`)
+        )
+      );
+
+      const qWrap = el("div","card");
+      const dims = model.dims.slice(0,8);
+
+      dims.forEach((dim, idx)=>{
+        const row = el("div","row",
+          el("div","label", `${idx+1}. ${dim}`),
+          stars(STATE.answers[idx] ?? 0)
+        );
+
+        row.style.cursor="pointer";
+        row.title="點一下：在 1~5 星間切換（Demo）";
+        row.addEventListener("click", ()=>{
+          const cur = STATE.answers[idx] ?? 0;
+          const next = (cur % 5) + 1; // 1..5
+          STATE.answers[idx] = next;
+          STATE.answered = STATE.answers.filter(v=>v!=null).length;
+          saveDraft(); // BANKB：每次點選都保存草稿
+          render();
+        });
+
+        qWrap.appendChild(row);
+      });
+
+      const confirm = el("button","btn","完成回覆");
+      confirm.addEventListener("click", ()=>{
+        saveDraft();
+        go("confirm");
+      });
+
+      const restart = el("button","btn ghost","清除草稿/重做");
+      restart.addEventListener("click", ()=>{
+        clearDraft();
+        render();
+      });
+
+      app.replaceChildren(
+        topNav({leftText:"返回", midText:"盤點", rightText:"", onLeft: ()=>go("home")}),
+        title,
+        qWrap,
+        confirm,
+        restart,
+        el("div","hint", "操作：點每一列可在 1～5 星間切換（示範用）。")
+      );
+    }
+
+    function renderConfirm(){
+      const model = BANK[STATE.model];
+      const card = el("div","card",
+        el("div","meta",
+          el("div","", "<b>已回答</b>"),
+          el("div","", `${STATE.answered} / ${STATE.total}`)
+        ),
+        el("div","meta",
+          el("div","", "<b>主題</b>"),
+          el("div","", (STATE.topicLabel || model.topics.find(x=>x.key===STATE.topicKey)?.label || "-"))
+        )
+      );
+
+      const gen = el("button","btn","生成我的結果");
+      gen.addEventListener("click", ()=>{
+        // Demo：兩步走（先算星等再顯示摘要）
+        STATE.summary = computeSummary();
+        saveDraft();
+        go("summary");
+      });
+
+      const back = el("button","btn secondary","回到上一題修改");
+      back.addEventListener("click", ()=>go("quiz"));
+
+      app.replaceChildren(
+        topNav({leftText:"返回", midText:"完成", rightText:"", onLeft: ()=>go("quiz")}),
+        el("h1","", "已完成回答，<br>要生成結果嗎？"),
+        el("p","", "你可以回到上一題修改，也可以直接生成星等與洞察。"),
+        card,
+        gen,
+        back,
+        el("div","hint","生成分兩步：先計算星等 → 再生成洞察（更像商業工具的可信流程）。")
+      );
+    }
+
+    function renderSummary(){
+      const s = STATE.summary || computeSummary();
+      const model = BANK[STATE.model];
+
+      const card = el("div","card");
+
+      const head = el("div","bigscore",
+        el("div","n", String(s.level)),
+        el("div","",
+          el("div","txt", `${s.headline}`),
+          stars(s.level),
+          el("div","", `<div style="margin-top:6px;color:#64748B;font-weight:800;">可信度：${s.confidence}%（已回答 ${STATE.answered}/${STATE.total}）</div>`)
+        )
+      );
+
+      card.appendChild(head);
+
+      const list = el("div","list");
+      s.perDim.forEach(x=>{
+        list.appendChild(
+          el("div","row",
+            el("div","label", x.dim),
+            stars(x.score)
+          )
+        );
+      });
+      card.appendChild(list);
+
+      const insights = el("div","card",
+        el("div","section-title","三個洞察"),
+        el("div","pillbox", s.insight[0]),
+        el("div","pillbox", s.insight[1]),
+        el("div","pillbox", s.insight[2])
+      );
+      insights.querySelectorAll(".pillbox").forEach(x=>{ x.style.marginTop="10px"; });
+
+      const action = el("div","card",
+        el("div","section-title","立即行動（今天就能做）"),
+        el("div","pillbox", `<b>${s.action}</b>`)
+      );
+
+      const actions = el("div","actions2",
+        el("button","btn","展開完整版"),
+        el("button","btn secondary","分享摘要")
+      );
+
+      actions.children[0].addEventListener("click", ()=>go("full"));
+
+      actions.children[1].addEventListener("click", async ()=>{
+        const text =
+`【M9/M12 Demo 摘要】
+模型：${BANK[STATE.model].name}
+主題：${STATE.topicLabel || model.topics.find(x=>x.key===STATE.topicKey)?.label || "-"}
+等級：${s.level} / 5（${s.headline}）
+洞察：
+- ${s.insight[0]}
+- ${s.insight[1]}
+- ${s.insight[2]}
+行動：${s.action}
+Build：${BUILD.product} ${BUILD.version} ${BUILD.date} (${BUILD.buildNo})`;
+
+        try{
+          if(navigator.share){
+            await navigator.share({ text });
+          }else{
+            await navigator.clipboard.writeText(text);
+            alert("已複製摘要到剪貼簿");
+          }
+        }catch(e){
+          // ignore
+        }
+      });
+
+      const reset = el("button","btn ghost","清除草稿/重做");
+      reset.addEventListener("click", ()=>{
+        clearDraft();
+        resetAll();
+      });
+
+      app.replaceChildren(
+        topNav({leftText:"回首頁", midText:"結果摘要", rightText:"", onLeft: ()=>go("home")}),
+        el("h1","", "你的結果摘要"),
+        el("p","", "先看重點卡片，再決定要不要展開完整版。"),
+        card,
+        insights,
+        action,
+        actions,
+        reset,
+        el("div","hint","商業化掛點：完整版可加「30 天行動計畫」「團隊對照」「顧問訪談提綱」。")
+      );
+    }
+
+    function renderFull(){
+      const s = STATE.summary || computeSummary();
+      const modelName = BANK[STATE.model].name;
+
+      const doc = el("div","card",
+        el("div","section-title","完整版（示意）"),
+        el("div","pillbox",
+          `模型：<b>${modelName}</b><br>`+
+          `主題：<b>${STATE.topicLabel || "-"}</b><br>`+
+          `等級：<b>${s.level}/5</b>（${s.headline}）<br><br>`+
+          `這裡可擴充：<br>`+
+          `• 30 天行動計畫（每週 2 個微任務）<br>`+
+          `• 團隊對照：主管/同儕/下屬互評差距<br>`+
+          `• 顧問用：訪談提綱與追問清單<br>`+
+          `• 追蹤：2 週後再測一次（看改善曲線）`
+        )
+      );
+
+      const back = el("button","btn secondary","回到摘要");
+      back.addEventListener("click", ()=>go("summary"));
+
+      const home = el("button","btn ghost","回首頁");
+      home.addEventListener("click", ()=>go("home"));
+
+      app.replaceChildren(
+        topNav({leftText:"回摘要", midText:"完整版", rightText:"", onLeft: ()=>go("summary")}),
+        doc,
+        back,
+        home
+      );
+    }
+
+    function render(){
+      setBuildLabel();
+
+      switch(STATE.route){
+        case "home":     return renderHome();
+        case "settings": return renderSettings();
+        case "quiz":     return renderQuiz();
+        case "confirm":  return renderConfirm();
+        case "summary":  return renderSummary();
+        case "full":     return renderFull();
+        default:         return renderHome();
+      }
+    }
+
+    // start
     render();
-  });
-  root.appendChild(clear);
-
-  const foot = el("div","hint",
-    `商業化對點：完整版可加「30 天行動計畫」「團隊對照」「顧問訪談提綱」。<br>` +
-    `（當前主題草稿已保留，換主題也不會覆蓋。）`
-  );
-  root.appendChild(foot);
-}
-
-/* =========================================================
-   Mode + Draft handling
-   ========================================================= */
-function loadMode(){
-  return localStorage.getItem(LS_MODE_KEY) || "M12";
-}
-function saveMode(m){
-  localStorage.setItem(LS_MODE_KEY, m);
-}
-function loadTopic(){
-  return localStorage.getItem(LS_TOPIC_KEY) || "";
-}
-function saveTopic(t){
-  localStorage.setItem(LS_TOPIC_KEY, t || "");
-}
-function draftKey(){
-  const topic = (state.topic || "").trim();
-  return `${LS_DRAFT_PREFIX}__${state.mode}__${topic}`;
-}
-function loadDraftIfAny(forceReload=false){
-  const topic = (state.topic || "").trim();
-  if(!topic) return;
-
-  if(forceReload){
-    // 直接重載
-  }
-
-  const raw = localStorage.getItem(draftKey());
-  if(!raw){
-    // 初始化
-    state.answers = new Array(BANK[state.mode].questionCount).fill(0);
-    state.idx = 0;
-    return;
-  }
-  try{
-    const data = JSON.parse(raw);
-    const n = BANK[state.mode].questionCount;
-    state.answers = (data.answers || []).slice(0, n);
-    while(state.answers.length < n) state.answers.push(0);
-    state.idx = Math.min(data.idx || 0, n-1);
-  }catch(e){
-    state.answers = new Array(BANK[state.mode].questionCount).fill(0);
-    state.idx = 0;
-  }
-}
-function saveDraft(){
-  const topic = (state.topic || "").trim();
-  if(!topic) return;
-  localStorage.setItem(draftKey(), JSON.stringify({
-    answers: state.answers,
-    idx: state.idx,
-    savedAt: Date.now()
-  }));
-}
-function clearDraft(){
-  const topic = (state.topic || "").trim();
-  if(!topic) return;
-  localStorage.removeItem(draftKey());
-}
-function startQuiz(){
-  // 保證 answers 長度正確
-  const n = BANK[state.mode].questionCount;
-  if(!state.answers || state.answers.length !== n){
-    state.answers = new Array(n).fill(0);
-    state.idx = 0;
-  }
-  state.page = "quiz";
-  saveDraft();
-  render();
-}
-
-/* =========================================================
-   Advanced Settings Modal
-   ========================================================= */
-function hookModal(){
-  const back = document.getElementById("modalBack");
-  const btnM9 = document.getElementById("btnM9");
-  const btnM12 = document.getElementById("btnM12");
-
-  function paint(){
-    btnM9.classList.toggle("active", state.mode === "M9");
-    btnM12.classList.toggle("active", state.mode === "M12");
-  }
-
-  btnM9.addEventListener("click", ()=>{ state.mode="M9"; paint(); });
-  btnM12.addEventListener("click", ()=>{ state.mode="M12"; paint(); });
-
-  document.getElementById("btnCancel").addEventListener("click", closeModal);
-
-  document.getElementById("btnSave").addEventListener("click", ()=>{
-    // 儲存 mode
-    saveMode(state.mode);
-
-    // mode 改變時：重新載入該模式+主題的草稿（互不覆蓋）
-    loadDraftIfAny(true);
-
-    closeModal证明();
-  });
-
-  back.addEventListener("click", (e)=>{
-    if(e.target === back) closeModal();
-  });
-
-  // 首次 paint
-  paint();
-}
-
-function openModal(){
-  const back = document.getElementById("modalBack");
-  back.style.display = "flex";
-
-  // 重新標記 active
-  document.getElementById("btnM9").classList.toggle("active", state.mode === "M9");
-  document.getElementById("btnM12").classList.toggle("active", state.mode === "M12");
-}
-function closeModal(){
-  document.getElementById("modalBack").style.display = "none";
-}
-function closeModal证明(){
-  closeModal();
-  render();
-}
-
-/* =========================================================
-   Scoring + Insights
-   ========================================================= */
-function calcScore(){
-  const arr = state.answers || [];
-  const total = arr.length;
-  const answered = arr.filter(v=>v>0).length;
-  const avg = answered ? arr.reduce((a,b)=>a+b,0)/answered : 0;
-
-  // 固定 8 維度（demo）
-  const dims = DIMENSIONS.map((name, i)=>{
-    const v = arr[i % arr.length] || 0;
-    const stars = toStars(v || Math.max(1, Math.round(avg)));
-    return { name, stars };
-  });
-
-  return {
-    total,
-    answered,
-    overall: Math.max(1, Math.min(5, avg || 3)),
-    dims
-  };
-}
-
-function toStars(v){
-  const n = Math.max(1, Math.min(5, Math.round(v)));
-  return n;
-}
-
-function buildInsights(score, style){
-  const strength = pickTopDim(score.dims);
-  const weak = pickBottomDim(score.dims);
-
-  const base = [
-    {
-      tag: `洞察 1（優勢）｜優勢在「${strength.name}」`,
-      text: style==="long"
-        ? `你在「${strength.name}」的表現較穩定，通常能把事情推進到可被他人理解與採納的程度。建議把你常用的成功做法寫成 3 條「可複用句型」，讓團隊跟著用。`
-        : `你在「${strength.name}」表現穩定，建議把成功做法整理成 3 條可複用句型。`
-    },
-    {
-      tag: `洞察 2（風險）｜短板在「${weak.name}」`,
-      text: style==="long"
-        ? `「${weak.name}」較容易變成卡關點：不是能力不足，而是缺少固定流程或回路。你可以先把此面向拆成 2 個可觀察動作（例如：每次會議結尾固定做確認／回饋）。`
-        : `「${weak.name}」是主要風險點：先用固定流程補上回路。`
-    },
-    {
-      tag: `洞察 3（升級）｜先把「一件事做到可預期」`,
-      text: style==="long"
-        ? `先選 1–2 個高頻情境（例：交辦、對齊、變更需求），用固定格式處理：目的 → 輸出 → 截止時間 → 驗收方式。你會明顯降低溝通成本，也更容易被信任。`
-        : `選 1–2 個高頻情境，固定用：目的_ATTACHMENT → 輸出 → 截止時間 → 驗收方式。`
-    }
-  ];
-  return base;
-}
-
-function pickTopDim(dims){
-  // 以星星最多為 top
-  return dims.reduce((best, cur)=>{
-    return cur.stars > best.stars ? cur : best;
-  }, dims[0]);
-}
-function pickBottomDim(dims){
-  return dims.reduce((best, cur)=>{
-    return cur.stars < best.stars ? cur : best;
-  }, dims[0]);
-}
-
-/* =========================================================
-   Helpers
-   ========================================================= */
-function el(tag, cls, ...parts){
-  const e = document.createElement(tag);
-  if (cls) e.className = cls;
-
-  for (const p of parts){
-    if (p === null || p === undefined) continue;
-
-    // 字串：允許帶 HTML（例如 <b>...）
-    if (typeof p === "string"){
-      e.insertAdjacentHTML("beforeend", p);
-      continue;
-    }
-
-    // 節點：直接 append
-    if (p instanceof Node){
-      e.appendChild(p);
-      continue;
-    }
-
-    // 其他型別：當文字塞進去
-    e.appendChild(document.createTextNode(String(p)));
-  }
-  return e;
-}
-
-}
-  
-function renderStars(n){
-  let out = "";
-  for(let i=1;i<=5;i++){
-    out += `<span class="star ${i<=n ? "on":"off"}">★</span>`;
-  }
-  return out;
-}
-function shake(node){
-  node.animate(
-    [{transform:"translateX(0)"},{transform:"translateX(-6px)"},{transform:"translateX(6px)"},{transform:"translateX(0)"}],
-    {duration: 240, iterations: 1}
-  );
-}
-function getHHMM(){
-  const d = new Date();
-  const hh = String(d.getHours()).padStart(2,"0");
-  const mm = String(d.getMinutes()).padStart(2,"0");
-  return `${hh}:${mm}`;
-}
-</script>
+  </script>
 </body>
 </html>
-
